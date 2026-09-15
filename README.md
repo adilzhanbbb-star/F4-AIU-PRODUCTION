@@ -1,5 +1,5 @@
 # F4-AIU-PRODUCTION
-Adilzhan)
+Adilzhan
 Yessen
 Assemay
 Dina
