@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Біздің команда</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111827;
+            color: white;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        header h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #9ca3af;
+            font-size: 18px;
+        }
+
+        .team {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: #1f2937;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid #374151;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #60a5fa;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #9ca3af;
+        }
+
+        /* Ақпарат шығатын терезе */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #1f2937;
+            max-width: 500px;
+            width: 100%;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-content img {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        .modal-content h2 {
+            font-size: 30px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            color: #d1d5db;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 35px;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+
+        .close:hover {
+            color: white;
+        }
+
+        @media (max-width: 800px) {
+            .team {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 500px) {
+            .team {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Біздің команда</h1>
+        <p>4 студент туралы ақпарат</p>
+    </header>
+
+    <section class="team">
+
+        <!-- 1 адам -->
+        <div class="card" onclick="showInfo(0)">
+            <img src="Esen.jpg.jpeg" alt="1 студент">
+            <h2>Abdukarim Esen</h2>
+            <p>Programmer</p>
+        </div>
+
+        <!-- 2 адам -->
+        <div class="card" onclick="showInfo(1)">
+            <img src="Adilzhan.jpg.jpeg" alt="2 студент">
+            <h2>Bolat Adilzhan</h2>
+            <p>Web Developer</p>
+        </div>
+
+        <!-- 3 адам -->
+        <div class="card" onclick="showInfo(2)">
+            <img src="Assemay.jpg.jpeg" alt="3 студент">
+            <h2>Balorazkyzy Assemai</h2>
+            <p>Designer</p>
+        </div>
+
+        <!-- 4 адам -->
+        <div class="card" onclick="showInfo(3)">
+            <img src="Dina.jpg.jpeg" alt="4 студент">
+            <h2>Daulenbaeva Dina</h2>
+            <p>Developer</p>
+        </div>
+
+    </section>
+
+
+    <!-- Ақпарат шығатын терезе -->
+    <div class="modal" id="modal">
+
+        <div class="modal-content">
+
+            <span class="close" onclick="closeInfo()">&times;</span>
+
+            <img id="modalImage" src="" alt="Фото">
+
+            <h2 id="modalName"></h2>
+
+            <p id="modalInfo"></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // 4 адамның мәліметтері
+        const students = [
+
+            {
+                name: "Abdukarim Esen",
+                image: "Esen.jpg.jpeg",
+                info: "AIU университетінің студенті. Бағыты: программалау. Web development және заманауи технологияларға қызығады."
+            },
+
+            {
+                name: "Bolat Adilzhan",
+                image: "Adilzhan.jpg.jpeg",
+                info: "AIU университетінің студенті. Web development бағытында жұмыс істейді. HTML, CSS және JavaScript үйренуде."
+            },
+
+            {
+                name: "Balorazkyzy Assemai",
+                image: "Assemay.jpg.jpeg",
+                info: "AIU университетінің студенті. Дизайн және IT саласына қызығады. Жаңа жобалармен жұмыс істейді."
+            },
+
+            {
+                name: "Daulenbaeva Dina",
+                image: "Dina.jpg.jpeg",
+                info: "AIU университетінің студенті. Бағдарламалау және компьютерлік технологияларға қызығады."
+            }
+
+        ];
+
+
+        // Карточканы басқанда
+        function showInfo(index) {
+
+            document.getElementById("modalName").textContent =
+                students[index].name;
+
+            document.getElementById("modalImage").src =
+                students[index].image;
+
+            document.getElementById("modalInfo").textContent =
+                students[index].info;
+
+            document.getElementById("modal").style.display = "flex";
+        }
+
+
+        // Жабу
+        function closeInfo() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+
+        // Терезенің сыртын басқанда жабылады
+        window.onclick = function(event) {
+
+            const modal = document.getElementById("modal");
+
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
