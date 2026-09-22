@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esen Abdukarim | Portfolio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b0b0b;
+            color: white;
+            line-height: 1.6;
+        }
+
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: auto;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text p:first-child {
+            color: #999;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 65px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        h1 span {
+            color: #aaa;
+        }
+
+        .description {
+            color: #bbb;
+            font-size: 18px;
+            max-width: 550px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            color: white;
+            border: 1px solid #555;
+            padding: 12px 25px;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .photo {
+            width: 330px;
+            height: 430px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        section {
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            font-size: 40px;
+            margin-bottom: 40px;
+        }
+
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #151515;
+            border: 1px solid #292929;
+            border-radius: 18px;
+            padding: 30px;
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #aaa;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .skill {
+            background: #202020;
+            padding: 10px 18px;
+            border-radius: 20px;
+            color: #ddd;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .project {
+            background: #151515;
+            padding: 25px;
+            border-radius: 18px;
+            border: 1px solid #292929;
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            transform: translateY(-5px);
+            border-color: #666;
+        }
+
+        .project h3 {
+            margin-bottom: 10px;
+        }
+
+        .project p {
+            color: #999;
+        }
+
+        .contact {
+            text-align: center;
+        }
+
+        .contact p {
+            color: #aaa;
+            margin: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            border-top: 1px solid #222;
+        }
+
+        @media (max-width: 800px) {
+            h1 {
+                font-size: 45px;
+            }
+
+            .hero {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+            .photo {
+                width: 280px;
+                height: 360px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <div class="hero">
+
+            <div class="hero-text">
+                <p>HELLO, I'M</p>
+
+                <h1>
+                    Esen<br>
+                    <span>Abdukarim</span>
+                </h1>
+
+                <p class="description">
+                    IT студенті, Web Developer және модель.
+                    Технология, спорт, сән және шығармашылықты
+                    бір жерде біріктіруге қызығамын.
+                </p>
+
+                <div class="buttons">
+                    <a href="#about" class="btn">Мен туралы</a>
+                    <a href="#contact" class="btn">Байланыс</a>
+                </div>
+            </div>
+
+            <div class="photo">
+                <!-- Өз суретіңнің атын photo.jpg деп қой -->
+                <img src="Esen.jpg.jpeg" alt="Esen Abdukarim">
+            </div>
+
+        </div>
+    </div>
+</header>
+
+
+<section id="about">
+    <div class="container">
+
+        <h2 class="section-title">Мен туралы</h2>
+
+        <div class="about">
+
+            <div class="card">
+                <h3>👨‍💻 IT & Development</h3>
+                <p>
+                    Астана халықаралық университетінің студентімін.
+                    Бағдарламалау және Web Development бағытында
+                    білім алып жатырмын. HTML, CSS, C++, SQL және
+                    Linux технологияларымен жұмыс істеймін.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>📸 Modeling & Creativity</h3>
+                <p>
+                    Модельдік бағытта дамып келемін. Fashion,
+                    commercial және creative түсірілімдерге
+                    қызығамын. Сонымен қатар актерлік өнер,
+                    би және stunt бағыттарына қызығушылығым бар.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">Skills</h2>
+
+        <div class="skills">
+            <div class="skill">HTML</div>
+            <div class="skill">CSS</div>
+            <div class="skill">C++</div>
+            <div class="skill">SQL</div>
+            <div class="skill">Linux</div>
+            <div class="skill">Git & GitHub</div>
+            <div class="skill">Web Development</div>
+            <div class="skill">Modeling</div>
+            <div class="skill">Acting</div>
+            <div class="skill">Sport</div>
+        </div>
+
+    </div>
+</section>
+
+
+<section>
+    <div class="container">
+
+        <h2 class="section-title">Projects</h2>
+
+        <div class="projects">
+
+            <div class="project">
+                <h3>💻 Sport Up</h3>
+                <p>
+                    Спорт, тамақтану және өзін-өзі дамытуға
+                    арналған веб-платформа.
+                </p>
+            </div>
+
+            <div class="project">
+                <h3>🌱 Green Factory</h3>
+                <p>
+                    Қалдықтарды қайта өңдеу және экологиялық
+                    өндіріс туралы бизнес-жоба.
+                </p>
+            </div>
+
+            <div class="project">
+                <h3>🌐 Portfolio</h3>
+                <p>
+                    Өзімнің IT және модельдік жұмыстарымды
+                    көрсететін жеке портфолио веб-сайты.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<section id="contact">
+    <div class="container contact">
+
+        <h2 class="section-title">Contact</h2>
+
+        <p>Егер бірге жұмыс жасағыңыз келсе, байланысыңыз.</p>
+
+        <div class="buttons" style="justify-content:center; margin-top:25px;">
+            <a href="https://www.instagram.com/abdukkarimoov?stkn=MTZsaTkxZHVlamt4Yg%3D%3D&utm_source=qr" class="btn">Instagram</a>
+            <a href="mailto:esen" class="btn">Email</a>
+            <a href="https://github.com/" class="btn">GitHub</a>
+        </div>
+
+    </div>
+</section>
+
+
+<footer>
+    © 2026 Esen Abdukarim — Portfolio
+</footer>
+
+</body>
+</html>

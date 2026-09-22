@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Team | Portfolio</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #080808;
+            color: white;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 22px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: rgba(8,8,8,0.9);
+            backdrop-filter: blur(15px);
+
+            border-bottom: 1px solid #222;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            margin-left: 30px;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+
+        /* HERO */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 120px 20px 60px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .small-title {
+            color: #777;
+            letter-spacing: 5px;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(55px, 9vw, 110px);
+            line-height: .95;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 span {
+            color: #555;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+
+            color: #999;
+
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+
+        /* TEAM */
+
+        .team-section {
+            padding: 100px 7%;
+        }
+
+        .section-heading {
+            margin-bottom: 45px;
+        }
+
+        .section-heading small {
+            color: #777;
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            font-size: 50px;
+            margin-top: 10px;
+        }
+
+
+        .team {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+
+        .member {
+            position: relative;
+
+            height: 500px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            background: #151515;
+
+            border: 1px solid #292929;
+
+            cursor: pointer;
+
+            transition: .4s;
+        }
+
+        .member:hover {
+            transform: translateY(-10px);
+            border-color: #777;
+        }
+
+
+        .member img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            filter: grayscale(100%);
+
+            transition: .5s;
+        }
+
+        .member:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+
+        .member-info {
+            position: absolute;
+
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            padding: 30px 25px;
+
+            background: linear-gradient(
+                transparent,
+                rgba(0,0,0,.95)
+            );
+        }
+
+        .member-info small {
+            color: #aaa;
+        }
+
+        .member-info h3 {
+            font-size: 22px;
+            margin: 5px 0;
+        }
+
+        .member-info span {
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        /* PROFILE */
+
+        #profile {
+            display: none;
+
+            padding: 120px 7%;
+
+            background: #0d0d0d;
+
+            border-top: 1px solid #222;
+        }
+
+
+        .profile-box {
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            display: grid;
+
+            grid-template-columns: 350px 1fr;
+
+            gap: 60px;
+
+            align-items: center;
+        }
+
+
+        .profile-photo {
+
+            width: 100%;
+            height: 450px;
+
+            object-fit: cover;
+
+            border-radius: 20px;
+
+            border: 1px solid #333;
+        }
+
+
+        .profile-number {
+            color: #666;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+
+        .profile-name {
+            font-size: 55px;
+            line-height: 1;
+
+            margin-bottom: 15px;
+        }
+
+
+        .profile-role {
+            color: #999;
+
+            font-size: 18px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .profile-description {
+            color: #aaa;
+
+            line-height: 1.8;
+
+            margin-bottom: 30px;
+        }
+
+
+        .profile-skills {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .profile-skill {
+
+            background: #1c1c1c;
+
+            border: 1px solid #333;
+
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            color: #ccc;
+        }
+
+
+        .close-btn {
+
+            display: inline-block;
+
+            padding: 12px 25px;
+
+            border: 1px solid #555;
+
+            border-radius: 30px;
+
+            color: white;
+
+            background: transparent;
+
+            cursor: pointer;
+
+            transition: .3s;
+        }
+
+        .close-btn:hover {
+
+            background: white;
+
+            color: black;
+        }
+
+
+        /* ABOUT */
+
+        .about {
+
+            padding: 100px 7%;
+        }
+
+        .about-box {
+
+            background: #121212;
+
+            border: 1px solid #292929;
+
+            border-radius: 25px;
+
+            padding: 60px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 50px;
+        }
+
+        .about h2 {
+            font-size: 45px;
+        }
+
+        .about p {
+            color: #999;
+
+            line-height: 1.8;
+        }
+
+
+        /* CONTACT */
+
+        .contact {
+
+            text-align: center;
+
+            padding: 130px 20px;
+        }
+
+        .contact h2 {
+
+            font-size: 60px;
+
+            margin: 15px 0;
+        }
+
+        .contact p {
+
+            color: #777;
+
+            margin-bottom: 30px;
+        }
+
+
+        .contact-btn {
+
+            display: inline-block;
+
+            padding: 14px 30px;
+
+            border: 1px solid #555;
+
+            border-radius: 30px;
+
+            color: white;
+
+            text-decoration: none;
+
+            transition: .3s;
+        }
+
+        .contact-btn:hover {
+
+            background: white;
+
+            color: black;
+        }
+
+
+        /* FOOTER */
+
+        footer {
+
+            border-top: 1px solid #222;
+
+            padding: 30px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #555;
+        }
+
+
+        /* MOBILE */
+
+        @media(max-width:1000px) {
+
+            .team {
+
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .profile-box {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .profile-photo {
+
+                max-width: 350px;
+
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            nav div:last-child {
+
+                display: none;
+            }
+
+            .team {
+
+                grid-template-columns: 1fr;
+            }
+
+            .member {
+
+                height: 480px;
+            }
+
+            .about-box {
+
+                grid-template-columns: 1fr;
+
+                padding: 35px;
+            }
+
+            .profile-name {
+
+                font-size: 40px;
+            }
+
+            footer {
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav>
+
+    <div class="logo">
+        OUR TEAM
+    </div>
+
+    <div>
+
+        <a href="#team">
+            Team
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#contact">
+            Contact
+        </a>
+
+    </div>
+
+</nav>
+
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="small-title">
+            DIGITAL CREATIVE TEAM
+        </div>
+
+        <h1>
+
+            WE CREATE<br>
+
+            <span>THE FUTURE.</span>
+
+        </h1>
+
+        <p>
+
+            Біз — IT, Web Development және Design
+            бағыттарында дамып келе жатқан студенттер
+            командасымыз. Әрқайсымыздың өз бағытымыз
+            бар, бірақ ортақ мақсатымыз — заманауи
+            digital жобалар жасау.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- TEAM -->
+
+<section class="team-section" id="team">
+
+    <div class="section-heading">
+
+        <small>
+            01 — OUR PEOPLE
+        </small>
+
+        <h2>
+            Team
+        </h2>
+
+    </div>
+
+
+    <div class="team">
+
+
+        <!-- ESEN -->
+
+        <div class="member"
+             onclick="showProfile('esen')">
+
+            <img src="/есен/Esen.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    01
+                </small>
+
+                <h3>
+                    Esen Abdukarim
+                </h3>
+
+                <span>
+                    IT Student · Web Developer
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BOLAT -->
+
+        <div class="member"
+             onclick="showProfile('bolat')">
+
+            <img src="/adilzhan/Adilzhan.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    02
+                </small>
+
+                <h3>
+                    Bolat Adilzhan
+                </h3>
+
+                <span>
+                    IT Student · Developer
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ASSEMAY -->
+
+        <div class="member"
+             onclick="showProfile('assemay')">
+
+            <img src="/assemai/Assemay.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    03
+                </small>
+
+                <h3>
+                    Balorazkyzy Assemay
+                </h3>
+
+                <span>
+                    Web Designer · UI/UX
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DINA -->
+
+        <div class="member"
+             onclick="showProfile('dina')">
+
+            <img src="/dina/Dina.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    04
+                </small>
+
+                <h3>
+                    Daulenbaeva Dina
+                </h3>
+
+                <span>
+                    Programmer · Software Developer
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- PROFILE -->
+
+<section id="profile">
+
+    <div class="profile-box">
+
+
+        <img id="profileImage"
+             class="profile-photo">
+
+
+        <div>
+
+            <div id="profileNumber"
+                 class="profile-number">
+            </div>
+
+
+            <h2 id="profileName"
+                class="profile-name">
+            </h2>
+
+
+            <div id="profileRole"
+                 class="profile-role">
+            </div>
+
+
+            <p id="profileDescription"
+               class="profile-description">
+            </p>
+
+
+            <div id="profileSkills"
+                 class="profile-skills">
+            </div>
+
+
+            <button class="close-btn"
+                    onclick="closeProfile()">
+
+                ← Back to Team
+
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ABOUT -->
+
+<section class="about"
+         id="about">
+
+    <div class="about-box">
+
+        <div>
+
+            <small style="color:#777;">
+                02 — ABOUT US
+            </small>
+
+            <h2 style="margin-top:15px;">
+
+                Four people.<br>
+
+                One vision.
+
+            </h2>
+
+        </div>
+
+
+        <div>
+
+            <p>
+
+                Біздің команда IT саласының әртүрлі
+                бағыттарын біріктіреді. Web Development,
+                Programming және UI/UX Design арқылы
+                заманауи жобалар жасауға тырысамыз.
+
+            </p>
+
+            <br>
+
+            <p>
+
+                Әр адамның жеке қабілеті мен бағыты бар.
+                Бірге жұмыс істей отырып, идеяларды
+                дайын digital өнімге айналдырамыз.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- CONTACT -->
+
+<section class="contact"
+         id="contact">
+
+    <p>
+        LET'S WORK TOGETHER
+    </p>
+
+    <h2>
+        Have an idea?
+    </h2>
+
+    <p>
+        Бізбен байланысып, жаңа жобаны бірге бастайық.
+    </p>
+
+    <a href="mailto:yourmail@gmail.com"
+       class="contact-btn">
+
+        Get in touch →
+
+    </a>
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div>
+        © 2026 Our Team
+    </div>
+
+    <div>
+        Digital Portfolio
+    </div>
+
+</footer>
+
+
+
+<script>
+
+    const profiles = {
+
+        esen: {
+
+            number: "01 — IT & CREATIVE",
+
+            name: "Esen Abdukarim",
+
+            role: "IT Student · Web Developer",
+
+            image: "/есен/Esen.jpg.jpeg",
+
+            description:
+            "IT саласында білім алып жатқан студент. Web Development, programming және digital технологияларға қызығамын. Сонымен қатар шығармашылық жобалармен жұмыс істеп, жаңа дағдыларды дамытуға тырысамын.",
+
+            skills: [
+                "HTML",
+                "CSS",
+                "C++",
+                "SQL",
+                "Linux",
+                "Git",
+                "GitHub",
+                "Web Development"
+            ]
+
+        },
+
+
+        bolat: {
+
+            number: "02 — DEVELOPMENT",
+
+            name: "Bolat Adilzhan",
+
+            role: "IT Student · Developer",
+
+            image: "/adilzhan/Adilzhan.jpg.jpeg",
+
+            description:
+            "IT саласында дамып келе жатқан студент. Бағдарламалау, Web Development және заманауи технологияларға қызығушылық танытамын. Негізгі мақсатым — тәжірибелі IT маманы болу.",
+
+            skills: [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "C++",
+                "SQL",
+                "Git",
+                "GitHub",
+                "Programming"
+            ]
+
+        },
+
+
+        assemay: {
+
+            number: "03 — DESIGN",
+
+            name: "Balorazkyzy Assemay",
+
+            role: "Web Designer · UI/UX",
+
+            image: "/assemai/Assemay.jpg.jpeg",
+
+            description:
+            "Web Design және UI/UX бағыттарына қызығатын дизайнер. Қолданушыға ыңғайлы, заманауи және эстетикалық веб-интерфейстер жасауға қызығамын.",
+
+            skills: [
+                "Figma",
+                "UI Design",
+                "UX Design",
+                "HTML",
+                "CSS",
+                "Prototyping",
+                "Web Design",
+                "Creative Thinking"
+            ]
+
+        },
+
+
+        dina: {
+
+            number: "04 — PROGRAMMING",
+
+            name: "Daulenbaeva Dina",
+
+            role: "Programmer · Software Developer",
+
+            image: "/dina/Dina.jpg.jpeg",
+
+            description:
+            "Бағдарламалау және Software Development бағытында дамып келе жатқан маман. Код жазу, алгоритмдер құру және пайдалы бағдарламалық жобалар жасауды үйреніп келемін.",
+
+            skills: [
+                "C++",
+                "Python",
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "SQL",
+                "Algorithms",
+                "Problem Solving"
+            ]
+
+        }
+
+    };
+
+
+
+    function showProfile(person) {
+
+        const data = profiles[person];
+
+
+        document.getElementById("profileNumber").textContent =
+            data.number;
+
+
+        document.getElementById("profileName").textContent =
+            data.name;
+
+
+        document.getElementById("profileRole").textContent =
+            data.role;
+
+
+        document.getElementById("profileDescription").textContent =
+            data.description;
+
+
+        document.getElementById("profileImage").src =
+            data.image;
+
+
+        const skills =
+            document.getElementById("profileSkills");
+
+
+        skills.innerHTML = "";
+
+
+        data.skills.forEach(skill => {
+
+            const element =
+                document.createElement("div");
+
+            element.className =
+                "profile-skill";
+
+            element.textContent =
+                skill;
+
+            skills.appendChild(element);
+
+        });
+
+
+        document.getElementById("profile").style.display =
+            "block";
+
+
+        document.getElementById("profile")
+            .scrollIntoView({
+
+                behavior: "smooth"
+
+            });
+
+    }
+
+
+
+    function closeProfile() {
+
+        document.getElementById("profile").style.display =
+            "none";
+
+
+        document.getElementById("team")
+            .scrollIntoView({
+
+                behavior: "smooth"
+
+            });
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
