@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="kk">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fa">
+    <meta name="description" content="Тапсырмаларыңызды қосыңыз, өңдеңіз және орындалғанын белгілеңіз. Қарапайым күнделікті жоспар.">
+    <title>Tizim — Менің тапсырмаларым</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <script src="store.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+      <symbol id="icon-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="icon-pencil" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l4.5-1L20 7.5a2.8 2.8 0 0 0-4-4L4.5 15 4 20Z"/></symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M3 6h18M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M5 6l1 14a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-14M10 10v7M14 10v7"/></symbol>
+      <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+      <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+      <symbol id="icon-arrow-right" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M5.5 7a7.5 7.5 0 0 1 12.4-2L20 8M4 16l2.1 3A7.5 7.5 0 0 0 18.5 17"/></symbol>
+      <symbol id="icon-list" viewBox="0 0 24 24"><path d="m3 6 1.5 1.5L7 4M11 6h10M3 13h4M11 13h10M3 20h4M11 20h10"/></symbol>
+      <symbol id="icon-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7M7 7h10v10"/></symbol>
+      <symbol id="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></symbol>
+      <symbol id="icon-link" viewBox="0 0 24 24"><path d="m10 13 4-4m-6 7-1 1a4.2 4.2 0 0 1-6-6l4-4a4.2 4.2 0 0 1 6 0m2 1 1-1a4.2 4.2 0 0 1 6 6l-4 4a4.2 4.2 0 0 1-6 0"/></symbol>
+    </svg>
+
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="Tizim — басты бет">
+          <span class="brand-mark"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+          <span>Tizim<span class="brand-dot">.</span></span>
+        </a>
+        <div class="header-right"><span class="workspace-label">Жеке кеңістік</span><span class="avatar" aria-hidden="true">М</span></div>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="eyebrow"><span class="small-line"></span> БІР ҚАДАМ АЛҒА</div>
+        <div class="intro-heading"><h1 id="page-title">Менің тапсырмаларым<span>.</span></h1><time id="today" class="date"></time></div>
+        <p class="intro-description">Ойдағы істерді жазып, біртіндеп орындаңыз.</p>
+      </section>
+
+      <section class="api-panel" aria-labelledby="api-heading">
+        <div class="api-heading"><h2 id="api-heading">Сыртқы API-ден жүктеу</h2><span class="api-badge">JSON</span></div>
+        <p id="api-help" class="api-help">JSON тапсырмалар тізімін беретін API сілтемесін қойып, жүктеу белгішесін басыңыз.</p>
+        <form id="api-form" class="api-form" novalidate>
+          <label class="sr-only" for="api-url">API сілтемесі</label>
+          <svg class="icon" aria-hidden="true"><use href="#icon-link"/></svg>
+          <input type="url" id="api-url" name="api-url" placeholder="https://jsonplaceholder.typicode.com/todos" autocomplete="off" spellcheck="false" required aria-describedby="api-help api-error">
+          <button type="submit" class="icon-button api-load-button" id="api-load-button" aria-label="API тізімін жүктеу" title="API тізімін жүктеу"><svg class="icon" id="api-load-icon" aria-hidden="true"><use href="#icon-download"/></svg><span class="loader" id="api-loader" aria-hidden="true" hidden></span></button>
+        </form>
+        <p id="api-error" class="field-error" role="alert" hidden></p>
+        <p id="api-feedback" class="api-feedback" role="status" aria-live="polite" hidden></p>
+        <div class="api-examples">
+          <p>Мысалдар <span>· сілтемені қою үшін басыңыз</span></p>
+          <div class="api-example-grid">
+            <button type="button" class="api-example" data-api="https://dummyjson.com/todos?limit=0"><strong>DummyJSON</strong><span>https://dummyjson.com/todos?limit=0</span></button>
+            <button type="button" class="api-example" data-api="https://jsonplaceholder.typicode.com/todos"><strong>JSONPlaceholder</strong><span>https://jsonplaceholder.typicode.com/todos</span></button>
+            <button type="button" class="api-example" data-api="https://dummyjson.com/todos?limit=10"><strong>DummyJSON · алғашқы 10 тапсырма</strong><span>https://dummyjson.com/todos?limit=10</span></button>
+            <button type="button" class="api-example" data-api="https://jsonplaceholder.typicode.com/users/1/todos"><strong>JSONPlaceholder · 1-пайдаланушы</strong><span>https://jsonplaceholder.typicode.com/users/1/todos</span></button>
+          </div>
+        </div>
+        <p class="api-source" id="api-source" hidden>Ашық тізім: <span id="api-source-url"></span></p>
+        <p class="api-storage-help">Әр API тізімі мен өзгерістері осы браузерде бөлек сақталады.</p>
+      </section>
+
+      <section class="stats" aria-label="Тапсырмалар статистикасы">
+        <div class="stat"><span class="stat-icon"><svg class="icon" aria-hidden="true"><use href="#icon-list"/></svg></span><div><span class="stat-label">Барлық тапсырма</span><strong id="total-count">—</strong></div></div>
+        <div class="stat"><span class="stat-icon stat-icon-active"><svg class="icon" aria-hidden="true"><use href="#icon-clock"/></svg></span><div><span class="stat-label">Орындалуы керек</span><strong id="active-count">—</strong></div></div>
+        <div class="stat"><span class="stat-icon stat-icon-done"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span><div><span class="stat-label">Орындалған</span><strong id="done-count">—</strong></div><div class="mini-progress" id="mini-progress" role="progressbar" aria-label="Орындалған тапсырмалар үлесі" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-percent">0%</span></div></div>
+      </section>
+
+      <section class="task-panel" aria-label="Тапсырмалар тізімі">
+        <div class="composer-wrap">
+          <form id="add-form" class="composer">
+            <label class="sr-only" for="new-task">Жаңа тапсырма</label>
+            <svg class="icon composer-icon" aria-hidden="true"><use href="#icon-plus"/></svg>
+            <input id="new-task" name="todo" placeholder="Жаңа тапсырма жазыңыз…" maxlength="500" required autocomplete="off" disabled>
+            <span class="enter-hint" aria-hidden="true">Enter ↵</span>
+            <button class="icon-button add-button" id="add-button" type="submit" title="Тапсырма қосу" aria-label="Тапсырма қосу" disabled><svg class="icon" aria-hidden="true"><use href="#icon-plus"/></svg></button>
+          </form>
+          <p id="add-error" class="field-error" role="alert" hidden></p>
+        </div>
+
+        <div class="list-toolbar">
+          <div class="filters" role="group" aria-label="Тапсырмаларды сүзу">
+            <button type="button" class="filter-button is-selected" data-filter="all" aria-pressed="true">Барлығы <span id="all-badge">0</span></button>
+            <button type="button" class="filter-button" data-filter="active" aria-pressed="false">Белсенді</button>
+            <button type="button" class="filter-button" data-filter="completed" aria-pressed="false">Орындалған</button>
+          </div>
+          <div class="search-field"><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><label class="sr-only" for="search">Тапсырма іздеу</label><input type="search" id="search" placeholder="Іздеу…" autocomplete="off"></div>
+        </div>
+
+        <div class="list-column-labels" aria-hidden="true"><span>ТАПСЫРМА</span><span>ӘРЕКЕТТЕР</span></div>
+        <ul id="todo-list" class="todo-list" aria-label="Тапсырмалар" aria-busy="true"></ul>
+        <div id="list-state" class="list-state" role="status" aria-live="polite"><span class="loader"></span><p>Тапсырмалар жүктелуде…</p></div>
+
+        <div class="list-footer">
+          <span id="list-caption" class="list-caption">Тізім дайындалуда</span>
+          <nav class="pagination" id="pagination" aria-label="Тізім беттері" hidden>
+            <button class="icon-button page-button" id="previous-page" type="button" aria-label="Алдыңғы бет" title="Алдыңғы бет"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-left"/></svg></button>
+            <span id="page-indicator" class="page-indicator" aria-live="polite"></span>
+            <button class="icon-button page-button" id="next-page" type="button" aria-label="Келесі бет" title="Келесі бет"><svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg></button>
+          </nav>
+        </div>
+      </section>
+
+      <div class="below-panel"><p><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg> Кішкентай қадамдар — үлкен нәтижелер.</p><span class="save-status" id="save-status"><span class="status-dot"></span><span id="save-label">Қосылуда</span></span></div>
+      <p class="storage-notice" id="storage-notice" hidden></p>
+      <noscript><p class="noscript">Сайтты пайдалану үшін браузерде JavaScript қосыңыз.</p></noscript>
+    </main>
+
+    <footer class="site-footer"><span>Tizim. Күніңізге айқындық қосыңыз.</span><div class="footer-links"><a href="https://dummyjson.com/docs/todos" target="_blank" rel="noopener noreferrer">DummyJSON <svg class="icon" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a><a href="https://jsonplaceholder.typicode.com/guide/" target="_blank" rel="noopener noreferrer">JSONPlaceholder <svg class="icon" aria-hidden="true"><use href="#icon-arrow-up-right"/></svg></a></div></footer>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  </body>
+</html>
