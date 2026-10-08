@@ -1,0 +1,1573 @@
+```html
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Our Team | Portfolio</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #080808;
+            color: white;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 22px 7%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: rgba(8, 8, 8, 0.9);
+            backdrop-filter: blur(15px);
+
+            border-bottom: 1px solid #222;
+
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            color: #aaa;
+            text-decoration: none;
+            margin-left: 30px;
+            transition: .3s;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 120px 20px 60px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .small-title {
+            color: #777;
+            letter-spacing: 5px;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(55px, 9vw, 110px);
+            line-height: .95;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 span {
+            color: #555;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+
+            color: #999;
+
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+
+        /* ================= TEAM ================= */
+
+        .team-section {
+            padding: 100px 7%;
+        }
+
+        .section-heading {
+            margin-bottom: 45px;
+        }
+
+        .section-heading small {
+            color: #777;
+            letter-spacing: 2px;
+        }
+
+        .section-heading h2 {
+            font-size: 50px;
+            margin-top: 10px;
+        }
+
+        .team {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .member {
+            position: relative;
+
+            height: 500px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            background: #151515;
+
+            border: 1px solid #292929;
+
+            cursor: pointer;
+
+            transition: .4s;
+        }
+
+        .member:hover {
+            transform: translateY(-10px);
+            border-color: #777;
+        }
+
+        .member img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            filter: grayscale(100%);
+
+            transition: .5s;
+        }
+
+        .member:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .member-info {
+            position: absolute;
+
+            bottom: 0;
+            left: 0;
+            right: 0;
+
+            padding: 30px 25px;
+
+            background: linear-gradient(
+                transparent,
+                rgba(0,0,0,.95)
+            );
+        }
+
+        .member-info small {
+            color: #aaa;
+        }
+
+        .member-info h3 {
+            font-size: 22px;
+            margin: 5px 0;
+        }
+
+        .member-info span {
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        /* ================= ABOUT ================= */
+
+        .about {
+            padding: 100px 7%;
+        }
+
+        .about-box {
+            background: #121212;
+
+            border: 1px solid #292929;
+
+            border-radius: 25px;
+
+            padding: 60px;
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 50px;
+        }
+
+        .about h2 {
+            font-size: 45px;
+        }
+
+        .about p {
+            color: #999;
+            line-height: 1.8;
+        }
+
+
+        /* ================= CONTACT ================= */
+
+        .contact {
+            text-align: center;
+            padding: 130px 20px;
+        }
+
+        .contact h2 {
+            font-size: 60px;
+            margin: 15px 0;
+        }
+
+        .contact p {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .contact-btn {
+            display: inline-block;
+
+            padding: 14px 30px;
+
+            border: 1px solid #555;
+
+            border-radius: 30px;
+
+            color: white;
+
+            text-decoration: none;
+
+            transition: .3s;
+        }
+
+        .contact-btn:hover {
+            background: white;
+            color: black;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            border-top: 1px solid #222;
+
+            padding: 30px 7%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #555;
+        }
+
+
+        /* ==================================================
+           MODAL
+        ================================================== */
+
+        .modal {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.92);
+
+            backdrop-filter: blur(12px);
+
+            z-index: 9999;
+
+            display: none;
+
+            padding: 40px 20px;
+
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-container {
+            max-width: 1100px;
+
+            margin: 30px auto;
+
+            background: #0b0b0b;
+
+            border: 1px solid #333;
+
+            border-radius: 25px;
+
+            overflow: hidden;
+
+            position: relative;
+
+            box-shadow:
+                0 30px 100px rgba(0,0,0,.8);
+        }
+
+        /* CLOSE BUTTON */
+
+        .modal-close {
+            position: absolute;
+
+            top: 20px;
+            right: 25px;
+
+            width: 45px;
+            height: 45px;
+
+            border-radius: 50%;
+
+            border: 1px solid #555;
+
+            background: rgba(0,0,0,.7);
+
+            color: white;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            z-index: 20;
+
+            transition: .3s;
+        }
+
+        .modal-close:hover {
+            background: white;
+            color: black;
+        }
+
+
+        /* ================= PORTFOLIO HERO ================= */
+
+        .portfolio-header {
+            min-height: 650px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 70px 60px;
+        }
+
+        .portfolio-hero {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            width: 100%;
+
+            gap: 60px;
+        }
+
+        .portfolio-text {
+            flex: 1;
+        }
+
+        .portfolio-text .hello {
+            color: #999;
+
+            font-size: 16px;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 12px;
+        }
+
+        .portfolio-text h1 {
+            font-size: 65px;
+
+            line-height: 1.05;
+
+            margin-bottom: 25px;
+        }
+
+        .portfolio-text h1 span {
+            color: #777;
+        }
+
+        .portfolio-description {
+            color: #aaa;
+
+            font-size: 18px;
+
+            line-height: 1.8;
+
+            max-width: 550px;
+
+            margin-bottom: 30px;
+        }
+
+        .portfolio-buttons {
+            display: flex;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+        }
+
+        .portfolio-btn {
+            display: inline-block;
+
+            text-decoration: none;
+
+            color: white;
+
+            border: 1px solid #555;
+
+            padding: 12px 25px;
+
+            border-radius: 30px;
+
+            transition: .3s;
+        }
+
+        .portfolio-btn:hover {
+            background: white;
+
+            color: black;
+        }
+
+
+        /* ================= PHOTO ================= */
+
+        .portfolio-photo {
+            width: 330px;
+
+            height: 430px;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            border: 1px solid #444;
+
+            flex-shrink: 0;
+        }
+
+        .portfolio-photo img {
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+
+        /* ================= PORTFOLIO SECTIONS ================= */
+
+        .portfolio-section {
+            padding: 70px 60px;
+        }
+
+        .portfolio-title {
+            font-size: 40px;
+
+            margin-bottom: 35px;
+        }
+
+        .portfolio-about {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 25px;
+        }
+
+        .portfolio-card {
+            background: #151515;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 30px;
+        }
+
+        .portfolio-card h3 {
+            font-size: 23px;
+
+            margin-bottom: 15px;
+        }
+
+        .portfolio-card p {
+            color: #aaa;
+
+            line-height: 1.8;
+        }
+
+
+        /* ================= SKILLS ================= */
+
+        .skills {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        .skill {
+            background: #202020;
+
+            border: 1px solid #303030;
+
+            padding: 10px 18px;
+
+            border-radius: 20px;
+
+            color: #ddd;
+        }
+
+
+        /* ================= PROJECTS ================= */
+
+        .projects {
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .project {
+            background: #151515;
+
+            padding: 25px;
+
+            border-radius: 18px;
+
+            border: 1px solid #292929;
+
+            transition: .3s;
+        }
+
+        .project:hover {
+            transform: translateY(-5px);
+
+            border-color: #666;
+        }
+
+        .project h3 {
+            margin-bottom: 10px;
+        }
+
+        .project p {
+            color: #999;
+
+            line-height: 1.7;
+        }
+
+
+        /* ================= PORTFOLIO CONTACT ================= */
+
+        .portfolio-contact {
+            text-align: center;
+
+            padding: 80px 30px;
+        }
+
+        .portfolio-contact p {
+            color: #aaa;
+
+            margin: 10px 0;
+        }
+
+        .social-buttons {
+            display: flex;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            flex-wrap: wrap;
+
+            margin-top: 25px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:1000px) {
+
+            .team {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .portfolio-hero {
+                flex-direction: column-reverse;
+
+                text-align: center;
+            }
+
+            .portfolio-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .portfolio-buttons {
+                justify-content: center;
+            }
+
+            .portfolio-about {
+                grid-template-columns: 1fr;
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            nav div:last-child {
+                display: none;
+            }
+
+            .team {
+                grid-template-columns: 1fr;
+            }
+
+            .member {
+                height: 480px;
+            }
+
+            .about-box {
+                grid-template-columns: 1fr;
+
+                padding: 35px;
+            }
+
+            footer {
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+            .modal {
+                padding: 10px;
+            }
+
+            .modal-container {
+                margin: 10px auto;
+
+                border-radius: 18px;
+            }
+
+            .portfolio-header {
+                padding: 70px 25px 50px;
+            }
+
+            .portfolio-section {
+                padding: 55px 25px;
+            }
+
+            .portfolio-text h1 {
+                font-size: 45px;
+            }
+
+            .portfolio-photo {
+                width: 280px;
+
+                height: 360px;
+            }
+
+            .portfolio-title {
+                font-size: 35px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     MAIN NAVBAR
+================================================== -->
+
+<nav>
+
+    <div class="logo">
+        OUR TEAM
+    </div>
+
+    <div>
+
+        <a href="#team">
+            Team
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="#contact">
+            Contact
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ==================================================
+     MAIN HERO
+================================================== -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="small-title">
+            DIGITAL CREATIVE TEAM
+        </div>
+
+        <h1>
+            WE CREATE<br>
+            <span>THE FUTURE.</span>
+        </h1>
+
+        <p>
+            Біз — IT, Web Development және Design
+            бағыттарында дамып келе жатқан студенттер
+            командасымыз. Әрқайсымыздың өз бағытымыз
+            бар, бірақ ортақ мақсатымыз — заманауи
+            digital жобалар жасау.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     TEAM
+================================================== -->
+
+<section class="team-section" id="team">
+
+    <div class="section-heading">
+
+        <small>
+            01 — OUR PEOPLE
+        </small>
+
+        <h2>
+            Team
+        </h2>
+
+    </div>
+
+
+    <div class="team">
+
+
+        <!-- ESEN -->
+
+        <div class="member"
+             onclick="openPortfolio('esen')">
+
+            <img src="/есен/Esen.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    01
+                </small>
+
+                <h3>
+                    Esen Abdukarim
+                </h3>
+
+                <span>
+                    IT Student · Web Developer
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOLAT -->
+
+        <div class="member"
+             onclick="openPortfolio('bolat')">
+
+            <img src="/adilzhan/Adilzhan.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    02
+                </small>
+
+                <h3>
+                    Bolat Adilzhan
+                </h3>
+
+                <span>
+                    IT Student · Developer
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- ASSEMAY -->
+
+        <div class="member"
+             onclick="openPortfolio('assemay')">
+
+            <img src="/assemai/Assemay.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    03
+                </small>
+
+                <h3>
+                    Balorazkyzy Assemay
+                </h3>
+
+                <span>
+                    Web Designer · UI/UX
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- DINA -->
+
+        <div class="member"
+             onclick="openPortfolio('dina')">
+
+            <img src="/dina/Dina.jpg.jpeg">
+
+            <div class="member-info">
+
+                <small>
+                    04
+                </small>
+
+                <h3>
+                    Daulenbaeva Dina
+                </h3>
+
+                <span>
+                    Programmer · Software Developer
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     ABOUT
+================================================== -->
+
+<section class="about" id="about">
+
+    <div class="about-box">
+
+        <div>
+
+            <small style="color:#777;">
+                02 — ABOUT US
+            </small>
+
+            <h2 style="margin-top:15px;">
+                Four people.<br>
+                One vision.
+            </h2>
+
+        </div>
+
+        <div>
+
+            <p>
+                Біздің команда IT саласының әртүрлі
+                бағыттарын біріктіреді. Web Development,
+                Programming және UI/UX Design арқылы
+                заманауи жобалар жасауға тырысамыз.
+            </p>
+
+            <br>
+
+            <p>
+                Әр адамның жеке қабілеті мен бағыты бар.
+                Бірге жұмыс істей отырып, идеяларды
+                дайын digital өнімге айналдырамыз.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     CONTACT
+================================================== -->
+
+<section class="contact" id="contact">
+
+    <p>
+        LET'S WORK TOGETHER
+    </p>
+
+    <h2>
+        Have an idea?
+    </h2>
+
+    <p>
+        Бізбен байланысып, жаңа жобаны бірге бастайық.
+    </p>
+
+    <a href="mailto:yourmail@gmail.com"
+       class="contact-btn">
+
+        Get in touch →
+
+    </a>
+
+</section>
+
+
+<footer>
+
+    <div>
+        © 2026 Our Team
+    </div>
+
+    <div>
+        Digital Portfolio
+    </div>
+
+</footer>
+
+
+<!-- ==================================================
+     PORTFOLIO MODAL
+================================================== -->
+
+<div class="modal" id="portfolioModal">
+
+    <div class="modal-container">
+
+        <!-- CLOSE -->
+
+        <button class="modal-close"
+                onclick="closePortfolio()">
+            ×
+        </button>
+
+
+        <!-- PORTFOLIO CONTENT -->
+
+        <div id="portfolioContent"></div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* ==================================================
+       PORTFOLIO DATA
+    ================================================== */
+
+    const portfolios = {
+
+        /* ================= ESEN ================= */
+
+        esen: {
+
+            name: "Esen",
+            surname: "Abdukarim",
+
+            image: "/есен/Esen.jpg.jpeg",
+
+            description:
+                "IT студенті, Web Developer және модель. Технология, спорт, сән және шығармашылықты бір жерде біріктіруге қызығамын.",
+
+            about1Title:
+                "👨‍💻 IT & Development",
+
+            about1:
+                "Астана халықаралық университетінің студентімін. Бағдарламалау және Web Development бағытында білім алып жатырмын. HTML, CSS, C++, SQL және Linux технологияларымен жұмыс істеймін.",
+
+            about2Title:
+                "📸 Modeling & Creativity",
+
+            about2:
+                "Модельдік бағытта дамып келемін. Fashion, commercial және creative түсірілімдерге қызығамын. Сонымен қатар актерлік өнер, би және stunt бағыттарына қызығушылығым бар.",
+
+            skills: [
+                "HTML",
+                "CSS",
+                "C++",
+                "SQL",
+                "Linux",
+                "Git & GitHub",
+                "Web Development",
+                "Modeling",
+                "Acting",
+                "Sport"
+            ],
+
+            projects: [
+                [
+                    "💻 Sport Up",
+                    "Спорт, тамақтану және өзін-өзі дамытуға арналған веб-платформа."
+                ],
+                [
+                    "🌱 Green Factory",
+                    "Қалдықтарды қайта өңдеу және экологиялық өндіріс туралы бизнес-жоба."
+                ],
+                [
+                    "🌐 Portfolio",
+                    "IT және модельдік жұмыстарды көрсететін жеке портфолио веб-сайты."
+                ]
+            ],
+
+            instagram:
+                "https://www.instagram.com/abdukkarimoov?stkn=MTZsaTkxZHVlamt4Yg%3D%3D&utm_source=qr",
+
+            email:
+                "mailto:esen"
+
+        },
+
+
+        /* ================= BOLAT ================= */
+
+        bolat: {
+
+            name: "Bolat",
+            surname: "Adilzhan",
+
+            image: "/adilzhan/Adilzhan.jpg.jpeg",
+
+            description:
+                "IT студенті және болашақ Web Developer. Бағдарламалау, заманауи технологиялар және веб-қосымшалар жасау бағытында дамып келемін.",
+
+            about1Title:
+                "👨‍💻 IT & Development",
+
+            about1:
+                "Менің есімім — Bolat Adilzhan. IT саласында білім алып жатқан студентпін. Бағдарламалау және Web Development бағыттарына қызығушылық танытамын.",
+
+            about2Title:
+                "🚀 My Goal",
+
+            about2:
+                "Мақсатым — заманауи веб-технологияларды меңгеріп, кәсіби Web Developer болу. Жаңа технологияларды үйреніп, өз жобаларымды жасап, IT саласында тәжірибе жинағым келеді.",
+
+            skills: [
+                "HTML",
+                "CSS",
+                "JavaScript",
+                "C++",
+                "SQL",
+                "Git",
+                "GitHub",
+                "Linux",
+                "Web Development",
+                "Programming"
+            ],
+
+            projects: [
+                [
+                    "💻 Web Development",
+                    "HTML, CSS және JavaScript көмегімен заманауи веб-сайттар жасау жобасы."
+                ],
+                [
+                    "🗄️ Database",
+                    "SQL арқылы мәліметтер базасын құру, өңдеу және ақпараттарды басқару жобалары."
+                ],
+                [
+                    "🐙 GitHub",
+                    "Git және GitHub арқылы жобаларды сақтау, басқару және командалық жұмыс жасау."
+                ]
+            ],
+
+            instagram:
+                "https://www.instagram.com/adilzhan_bt?stkn=Z3oydGZ3eG81c2tp&utm_source=qr",
+
+            email:
+                "mailto:adilzhan.bbb@gmail.com"
+
+        },
+
+
+        /* ================= ASSEMAY ================= */
+
+        assemay: {
+
+            name: "Balorazkyzy",
+            surname: "Assemay",
+
+            image: "/assemai/Assemay.jpg.jpeg",
+
+            description:
+                "Web Designer және UI/UX Designer. Заманауи, ыңғайлы және эстетикалық веб-интерфейстерді жасауға қызығамын.",
+
+            about1Title:
+                "🎨 Web Design",
+
+            about1:
+                "Менің есімім — Balorazkyzy Assemay. Web Design саласына қызығушылық танытамын. Қолданушыға ыңғайлы және визуалды түрде әдемі веб-сайттар жасауды үйреніп келемін.",
+
+            about2Title:
+                "💡 UI/UX Design",
+
+            about2:
+                "Менің мақсатым — заманауи дизайн принциптерін меңгеріп, адамдарға түсінікті әрі ыңғайлы интерфейстер жасау. Жаңа идеяларды зерттеп, шығармашылық қабілетімді дамытуға тырысамын.",
+
+            skills: [
+                "UI Design",
+                "UX Design",
+                "Figma",
+                "HTML",
+                "CSS",
+                "Web Design",
+                "Responsive Design",
+                "Prototyping",
+                "Graphic Design",
+                "Creative Thinking"
+            ],
+
+            projects: [
+                [
+                    "🎨 Website Design",
+                    "Заманауи және responsive веб-сайттардың дизайнын жасау жобасы."
+                ],
+                [
+                    "📱 UI/UX Project",
+                    "Қолданушыға ыңғайлы мобильді және веб-интерфейстердің прототиптерін жасау."
+                ],
+                [
+                    "✨ Creative Design",
+                    "Жаңа идеяларды визуалды дизайнға айналдырып, ерекше digital жобалар жасау."
+                ]
+            ],
+
+            instagram:
+                "https://www.instagram.com/balorazkyzy_?stkn=MWllbzkzd2J0ZzliMg%3D%3D&utm_source=qr",
+
+            email:
+                "mailto:balorazkyzysemaj@gmail.com"
+
+        },
+
+
+        /* ================= DINA ================= */
+
+        dina: {
+
+            name: "Daulenbaeva",
+            surname: "Dina",
+
+            image: "/dina/Dina.jpg.jpeg",
+
+            description:
+                "Programmer және Software Developer. Бағдарламалау, алгоритмдер және заманауи технологиялар арқылы пайдалы жобалар жасауға қызығамын.",
+
+            about1Title:
+                "💻 Programming",
+
+            about1:
+                "Менің есімім — Daulenbaeva Dina. Бағдарламалау саласына қызығушылық танытамын. Код жазу, алгоритмдер құру және түрлі бағдарламалық жобалармен жұмыс істеуді үйреніп келемін.",
+
+            about2Title:
+                "🚀 My Goal",
+
+            about2:
+                "Мақсатым — бағдарламалау саласында кәсіби маман болу, жаңа технологияларды меңгеру және өзімнің пайдалы әрі функционалды жобаларымды жасау.",
+
+            skills: [
+                "C++",
+                "Python",
+                "JavaScript",
+                "HTML",
+                "CSS",
+                "SQL",
+                "Git",
+                "GitHub",
+                "Algorithms",
+                "Problem Solving"
+            ],
+
+            projects: [
+                [
+                    "💻 Programming Project",
+                    "C++ және Python тілдерінде алгоритмдер мен қарапайым бағдарламалар жасау."
+                ],
+                [
+                    "🌐 Web Application",
+                    "HTML, CSS және JavaScript көмегімен интерактивті веб-қосымшалар жасау."
+                ],
+                [
+                    "🗄️ Database",
+                    "SQL көмегімен мәліметтер базасын құру, ақпараттарды сақтау және басқару."
+                ]
+            ],
+
+            instagram:
+                "https://www.instagram.com/daulenbaevvva?stkn=cGZhdWlkc3dmeXB1&utm_source=qr",
+
+            email:
+                "mailto:ddaulenbaeva@icloud.com"
+
+        }
+
+    };
+
+
+    /* ==================================================
+       OPEN PORTFOLIO
+    ================================================== */
+
+    function openPortfolio(person) {
+
+        const data = portfolios[person];
+
+        if (!data) return;
+
+
+        let projectsHTML = "";
+
+        data.projects.forEach(project => {
+
+            projectsHTML += `
+                <div class="project">
+
+                    <h3>
+                        ${project[0]}
+                    </h3>
+
+                    <p>
+                        ${project[1]}
+                    </p>
+
+                </div>
+            `;
+
+        });
+
+
+        let skillsHTML = "";
+
+        data.skills.forEach(skill => {
+
+            skillsHTML += `
+                <div class="skill">
+                    ${skill}
+                </div>
+            `;
+
+        });
+
+
+        const content = `
+
+            <!-- PORTFOLIO HERO -->
+
+            <header class="portfolio-header">
+
+                <div class="portfolio-hero">
+
+                    <div class="portfolio-text">
+
+                        <p class="hello">
+                            HELLO, I'M
+                        </p>
+
+                        <h1>
+                            ${data.name}<br>
+                            <span>${data.surname}</span>
+                        </h1>
+
+                        <p class="portfolio-description">
+                            ${data.description}
+                        </p>
+
+                        <div class="portfolio-buttons">
+
+                            <a href="#portfolio-about"
+                               class="portfolio-btn">
+                                Мен туралы
+                            </a>
+
+                            <a href="#portfolio-contact"
+                               class="portfolio-btn">
+                                Байланыс
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="portfolio-photo">
+
+                        <img
+                            src="${data.image}"
+                            alt="${data.name} ${data.surname}"
+                        >
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ABOUT -->
+
+            <section
+                class="portfolio-section"
+                id="portfolio-about">
+
+                <h2 class="portfolio-title">
+                    Мен туралы
+                </h2>
+
+                <div class="portfolio-about">
+
+                    <div class="portfolio-card">
+
+                        <h3>
+                            ${data.about1Title}
+                        </h3>
+
+                        <p>
+                            ${data.about1}
+                        </p>
+
+                    </div>
+
+
+                    <div class="portfolio-card">
+
+                        <h3>
+                            ${data.about2Title}
+                        </h3>
+
+                        <p>
+                            ${data.about2}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SKILLS -->
+
+            <section class="portfolio-section">
+
+                <h2 class="portfolio-title">
+                    Skills
+                </h2>
+
+                <div class="skills">
+
+                    ${skillsHTML}
+
+                </div>
+
+            </section>
+
+
+            <!-- PROJECTS -->
+
+            <section class="portfolio-section">
+
+                <h2 class="portfolio-title">
+                    Projects
+                </h2>
+
+                <div class="projects">
+
+                    ${projectsHTML}
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTACT -->
+
+            <section
+                class="portfolio-contact"
+                id="portfolio-contact">
+
+                <h2 class="portfolio-title">
+                    Contact
+                </h2>
+
+                <p>
+                    Бірге жұмыс жасауға немесе
+                    байланысуға болады.
+                </p>
+
+                <div class="social-buttons">
+
+                    <a
+                        href="${data.instagram}"
+                        target="_blank"
+                        class="portfolio-btn">
+                        Instagram
+                    </a>
+
+                    <a
+                        href="https://github.com/"
+                        target="_blank"
+                        class="portfolio-btn">
+                        GitHub
+                    </a>
+
+                    <a
+                        href="${data.email}"
+                        class="portfolio-btn">
+                        Email
+                    </a>
+
+                </div>
+
+            </section>
+
+        `;
+
+
+        document.getElementById("portfolioContent").innerHTML =
+            content;
+
+
+        document.getElementById("portfolioModal")
+            .classList.add("active");
+
+
+        document.body.classList.add("modal-open");
+
+
+        document.getElementById("portfolioModal")
+            .scrollTop = 0;
+
+    }
+
+
+    /* ==================================================
+       CLOSE PORTFOLIO
+    ================================================== */
+
+    function closePortfolio() {
+
+        document.getElementById("portfolioModal")
+            .classList.remove("active");
+
+        document.body.classList.remove("modal-open");
+
+        document.getElementById("portfolioContent")
+            .innerHTML = "";
+
+    }
+
+
+    /* ==================================================
+       CLICK OUTSIDE MODAL
+    ================================================== */
+
+    document.getElementById("portfolioModal")
+        .addEventListener("click", function(event) {
+
+            if (event.target === this) {
+
+                closePortfolio();
+
+            }
+
+        });
+
+
+    /* ==================================================
+       ESC KEY
+    ================================================== */
+
+    document.addEventListener("keydown", function(event) {
+
+        if (event.key === "Escape") {
+
+            closePortfolio();
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>
+```

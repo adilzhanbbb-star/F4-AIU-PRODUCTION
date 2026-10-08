@@ -336,7 +336,7 @@
             if (!text) { input.focus(); return; }
             tasks = tasks.map((item) => item.id === task.id ? { ...item, text } : item);
             editingId = null;
-            saveTasks();
+            if (saveTasks()) showMessage("Тапсырма өзгерістері сақталды.", "success");
             render();
           });
           form.append(input, save, cancel);
@@ -382,14 +382,14 @@
 
     function toggleTask(id) {
       tasks = tasks.map((task) => task.id === id ? { ...task, completed: !task.completed } : task);
-      saveTasks();
+      if (saveTasks()) showMessage("Тапсырма күйі жаңартылды.", "success");
       render();
     }
 
     function deleteTask(id) {
       tasks = tasks.filter((task) => task.id !== id);
       if (editingId === id) editingId = null;
-      saveTasks();
+      if (saveTasks()) showMessage("Тапсырма өшірілді.", "success");
       render();
     }
 
@@ -475,10 +475,11 @@
       document.querySelectorAll(".filter").forEach((button) => {
         button.classList.toggle("active", button.dataset.filter === currentFilter);
       });
-      saveTasks();
+      if (saveTasks()) showMessage("Жаңа тапсырма қосылды.", "success");
       render();
       elements.newTask.focus();
     });
+
     elements.newTask.addEventListener("input", () => {
       elements.addButton.disabled = !elements.newTask.value.trim() || !currentSource;
     });
@@ -496,9 +497,12 @@
     });
 
     elements.clearCompleted.addEventListener("click", () => {
+      const removedCount = tasks.filter((task) => task.completed).length;
       tasks = tasks.filter((task) => !task.completed);
       editingId = null;
-      saveTasks();
+      if (saveTasks() && removedCount > 0) {
+        showMessage(`${removedCount} орындалған тапсырма өшірілді.`, "success");
+      }
       render();
     });
 
