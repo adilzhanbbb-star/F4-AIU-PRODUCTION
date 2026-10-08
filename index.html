@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f5">
+  <meta name="description" content="Тапсырмаларды сыртқы API-ден жүктеп, жоспарлаңыз және орындалғанын белгілеңіз.">
+  <title>Істер тізімі</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #202923;
+      background: #f6f7f5;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+      --green: #26734b;
+      --green-dark: #1d5e3b;
+      --muted: #778079;
+      --border: #e6e9e5;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; min-height: 100vh; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .page { width: min(760px, calc(100% - 36px)); margin: 0 auto; padding: 42px 0 64px; }
+    .topline { display: flex; justify-content: space-between; align-items: center; margin-bottom: 48px; }
+    .brand { display: flex; gap: 10px; align-items: center; font-weight: 750; letter-spacing: -.03em; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #fff; background: var(--green); }
+    .brand-mark svg { width: 19px; height: 19px; }
+    .today { color: var(--muted); font-size: 13px; }
+    .intro { margin-bottom: 30px; }
+    .eyebrow { margin: 0 0 12px; color: var(--green); font-size: 11px; font-weight: 750; letter-spacing: .14em; }
+    h1 { margin: 0; font-size: clamp(32px, 7vw, 46px); letter-spacing: -.055em; line-height: 1.08; }
+    .subtitle { margin: 12px 0 0; color: var(--muted); font-size: 15px; }
+    .panel { border: 1px solid var(--border); border-radius: 17px; background: #fff; box-shadow: 0 5px 20px #23332208; }
+    .api-panel { padding: 21px; margin-bottom: 20px; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    h2 { margin: 0; font-size: 15px; letter-spacing: -.02em; }
+    .badge { padding: 5px 8px; border-radius: 20px; color: var(--green); background: #eff7f1; font-size: 10px; font-weight: 750; letter-spacing: .07em; }
+    .help { margin: 0 0 14px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .api-form, .add-form { display: flex; align-items: center; gap: 10px; }
+    .api-form { padding: 5px 5px 5px 13px; border: 1px solid var(--border); border-radius: 11px; }
+    .api-form:focus-within, .add-form:focus-within { border-color: #83ae91; box-shadow: 0 0 0 3px #26734b12; }
+    .api-form input, .add-form input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #202923; }
+    .api-form input { font-size: 13px; }
+    .api-form input::placeholder, .add-form input::placeholder { color: #9aa29c; }
+    .load-button, .add-button { display: grid; flex: 0 0 auto; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 9px; color: #fff; background: var(--green); }
+    .load-button:hover, .add-button:hover { background: var(--green-dark); }
+    .load-button:disabled { cursor: wait; opacity: .65; }
+    .load-button svg, .add-button svg { width: 18px; height: 18px; }
+    .examples { margin-top: 15px; }
+    .examples-title { margin: 0 0 8px; color: #747d76; font-size: 11px; font-weight: 650; }
+    .example-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .example { border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; color: #465149; background: #fff; font-size: 11px; }
+    .example:hover { border-color: #a9c3b0; color: var(--green-dark); }
+    .message { margin: 12px 0 0; font-size: 12px; line-height: 1.5; }
+    .message.error { color: #b33d35; }
+    .message.success { color: var(--green); }
+    .source { margin: 11px 0 0; color: var(--muted); font-size: 11px; overflow-wrap: anywhere; }
+    .note { margin: 12px 0 0; color: #8a928c; font-size: 11px; line-height: 1.5; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0; }
+    .stat { padding: 14px 16px; border: 1px solid var(--border); border-radius: 13px; background: #fff; }
+    .stat-label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 11px; }
+    .stat strong { font-size: 21px; letter-spacing: -.04em; }
+    .tasks-panel { overflow: hidden; }
+    .add-wrap { padding: 15px; border-bottom: 1px solid var(--border); }
+    .add-form { padding: 5px 5px 5px 13px; border: 1px solid var(--border); border-radius: 11px; }
+    .add-form input { font-size: 14px; }
+    .add-button:disabled { cursor: not-allowed; opacity: .45; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 17px; border-bottom: 1px solid var(--border); }
+    .filters { display: flex; gap: 4px; }
+    .filter { padding: 7px 10px; border: 0; border-radius: 8px; color: #7c857e; background: transparent; font-size: 11px; }
+    .filter:hover { color: #27342b; background: #f4f6f3; }
+    .filter.active { color: var(--green-dark); background: #eef5ef; font-weight: 700; }
+    .clear-button { padding: 7px 0 7px 8px; border: 0; color: #838b85; background: transparent; font-size: 11px; }
+    .clear-button:hover { color: #b33d35; }
+    .task-list { margin: 0; padding: 0; list-style: none; }
+    .task { display: flex; align-items: center; gap: 12px; min-height: 66px; padding: 12px 16px; border-bottom: 1px solid #eef0ed; transition: background .18s ease; }
+    .task:last-child { border-bottom: 0; }
+    .task.completed { background: #f0f7f1; }
+    .task.completed .task-text { color: #849087; text-decoration: line-through; }
+    .check-button, .icon-button { display: grid; flex: 0 0 auto; place-items: center; width: 32px; height: 32px; border: 1px solid #dce2dc; border-radius: 9px; color: #79847c; background: #fff; }
+    .check-button:hover { border-color: var(--green); color: var(--green); }
+    .completed .check-button { border-color: var(--green); color: #fff; background: var(--green); }
+    .check-button svg, .icon-button svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .task-text { flex: 1; min-width: 0; color: #354039; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+    .actions { display: flex; flex: 0 0 auto; gap: 5px; }
+    .icon-button { width: 31px; height: 31px; border-color: transparent; color: #929a94; background: transparent; }
+    .icon-button:hover { border-color: var(--border); color: #354039; background: #fff; }
+    .icon-button.delete:hover { border-color: #f1d8d5; color: #b33d35; background: #fff8f7; }
+    .edit-form { display: flex; flex: 1; gap: 8px; }
+    .edit-form input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #cbd9ce; border-radius: 8px; outline: none; }
+    .edit-form input:focus { border-color: var(--green); }
+    .save-edit { padding: 7px 10px; border: 0; border-radius: 8px; color: #fff; background: var(--green); font-size: 12px; }
+    .cancel-edit { padding: 7px; border: 0; color: #778079; background: transparent; font-size: 12px; }
+    .empty { padding: 38px 18px; color: var(--muted); text-align: center; font-size: 13px; }
+    .empty strong { display: block; margin-bottom: 5px; color: #354039; font-size: 14px; }
+    .footer { margin-top: 18px; color: #929a94; text-align: center; font-size: 11px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (max-width: 560px) {
+      .page { width: min(100% - 24px, 760px); padding-top: 26px; }
+      .topline { margin-bottom: 37px; }
+      .api-panel { padding: 16px; }
+      .stats { gap: 7px; }
+      .stat { padding: 12px 10px; }
+      .stat-label { font-size: 10px; }
+      .toolbar { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .task { gap: 8px; padding: 10px; }
+      .task-text { font-size: 13px; }
+      .actions { gap: 1px; }
+      .icon-button { width: 29px; height: 29px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topline">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6"/></svg></span> Істер тізімі</div>
+      <time class="today" id="today"></time>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">ЖОСПАРЛА • ОРЫНДА • БЕЛГІЛЕ</p>
+      <h1>Бүгін не істейміз?</h1>
+      <p class="subtitle">Істеріңізді бір жерге жинап, орындалғанын белгілеңіз.</p>
+    </section>
+
+    <section class="panel api-panel" aria-labelledby="api-heading">
+      <div class="section-heading"><h2 id="api-heading">Сыртқы API-ден тапсырмалар</h2><span class="badge">API</span></div>
+      <p class="help">Тапсырмалар тізімі бар API сілтемесін енгізіңіз. DummyJSON және JSONPlaceholder форматтары автоматты оқылады.</p>
+      <form class="api-form" id="api-form">
+        <label class="sr-only" for="api-url">API сілтемесі</label>
+        <input id="api-url" type="url" placeholder="https://dummyjson.com/todos?limit=0" autocomplete="url" required>
+        <button class="load-button" id="load-button" type="submit" title="API-ден жүктеу" aria-label="API-ден жүктеу">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
+        </button>
+      </form>
+      <div class="examples">
+        <p class="examples-title">Мысал сілтемелер — басып, API-ді таңдаңыз</p>
+        <div class="example-list">
+          <button class="example" type="button" data-api="https://dummyjson.com/todos?limit=0">DummyJSON · барлық тапсырма</button>
+          <button class="example" type="button" data-api="https://dummyjson.com/todos?limit=10">DummyJSON · алғашқы 10</button>
+          <button class="example" type="button" data-api="https://jsonplaceholder.typicode.com/todos">JSONPlaceholder</button>
+          <button class="example" type="button" data-api="https://jsonplaceholder.typicode.com/users/1/todos">JSONPlaceholder · 1-пайдаланушы</button>
+        </div>
+      </div>
+      <p class="message" id="api-message" role="status" aria-live="polite" hidden></p>
+      <p class="source" id="source-label" hidden>Дереккөз: <span id="source-url"></span></p>
+      <p class="note">Өзгерістер браузерде сақталады. Сыртқы API-ге өзгеріс жазылмайды.</p>
+    </section>
+
+    <section class="stats" aria-label="Тапсырмалар статистикасы">
+      <div class="stat"><span class="stat-label">Барлығы</span><strong id="total-count">0</strong></div>
+      <div class="stat"><span class="stat-label">Орындалмаған</span><strong id="active-count">0</strong></div>
+      <div class="stat"><span class="stat-label">Орындалған</span><strong id="completed-count">0</strong></div>
+    </section>
+
+    <section class="panel tasks-panel" aria-label="Тапсырмалар">
+      <div class="add-wrap">
+        <form class="add-form" id="add-form">
+          <label class="sr-only" for="new-task">Жаңа тапсырма</label>
+          <input id="new-task" type="text" maxlength="500" placeholder="Жаңа тапсырма жазыңыз…" required>
+          <button class="add-button" id="add-button" type="submit" title="Тапсырма қосу" aria-label="Тапсырма қосу" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </form>
+      </div>
+      <div class="toolbar">
+        <div class="filters" role="group" aria-label="Тапсырмаларды сүзу">
+          <button class="filter active" type="button" data-filter="all">Барлығы</button>
+          <button class="filter" type="button" data-filter="active">Орындалмаған</button>
+          <button class="filter" type="button" data-filter="completed">Орындалған</button>
+        </div>
+        <button class="clear-button" id="clear-completed" type="button">Орындалғандарды өшіру</button>
+      </div>
+      <ul class="task-list" id="task-list" aria-live="polite"></ul>
+      <div class="empty" id="empty-state" hidden><strong>Әзірге тапсырма жоқ</strong>Жаңа тапсырма қосыңыз немесе басқа API-ден жүктеңіз.</div>
+    </section>
+    <p class="footer">Жеке жоспарыңыз — осы браузерде сақталады.</p>
+  </main>
+
+  <script>
+    "use strict";
+
+    const DEFAULT_API = "https://dummyjson.com/todos?limit=0";
+    const TASKS_KEY = "ister-tizimi:tasks:";
+    const SOURCE_KEY = "ister-tizimi:source";
+    const elements = {
+      apiForm: document.querySelector("#api-form"),
+      apiUrl: document.querySelector("#api-url"),
+      loadButton: document.querySelector("#load-button"),
+      apiMessage: document.querySelector("#api-message"),
+      sourceLabel: document.querySelector("#source-label"),
+      sourceUrl: document.querySelector("#source-url"),
+      addForm: document.querySelector("#add-form"),
+      newTask: document.querySelector("#new-task"),
+      addButton: document.querySelector("#add-button"),
+      taskList: document.querySelector("#task-list"),
+      emptyState: document.querySelector("#empty-state"),
+      totalCount: document.querySelector("#total-count"),
+      activeCount: document.querySelector("#active-count"),
+      completedCount: document.querySelector("#completed-count"),
+      clearCompleted: document.querySelector("#clear-completed")
+    };
+
+    let tasks = [];
+    let currentSource = "";
+    let currentFilter = "all";
+    let editingId = null;
+    let taskCounter = 0;
+
+    const now = new Date();
+    const weekdays = ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"];
+    const months = ["қаңтар", "ақпан", "наурыз", "сәуір", "мамыр", "маусым", "шілде", "тамыз", "қыркүйек", "қазан", "қараша", "желтоқсан"];
+    document.querySelector("#today").textContent = `${weekdays[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
+
+    function showMessage(text, kind) {
+      elements.apiMessage.textContent = text;
+      elements.apiMessage.className = `message ${kind}`;
+      elements.apiMessage.hidden = false;
+    }
+
+    function hideMessage() {
+      elements.apiMessage.hidden = true;
+      elements.apiMessage.textContent = "";
+    }
+
+    function storageKey(source) {
+      return `${TASKS_KEY}${source}`;
+    }
+
+    function saveTasks() {
+      try {
+        localStorage.setItem(storageKey(currentSource), JSON.stringify(tasks));
+        return true;
+      } catch (error) {
+        showMessage(`Тапсырмалар браузерде сақталмады: ${error.message}`, "error");
+        return false;
+      }
+    }
+
+    function createId(prefix = "local") {
+      taskCounter += 1;
+      return `${prefix}-${Date.now()}-${taskCounter}`;
+    }
+
+    function normalizeTodos(payload) {
+      let candidates;
+      if (Array.isArray(payload)) {
+        candidates = payload;
+      } else if (payload && typeof payload === "object") {
+        const listKey = ["todos", "tasks", "items", "data", "results"].find(
+          (key) => Array.isArray(payload[key])
+        );
+        candidates = listKey ? payload[listKey] : null;
+      }
+      if (!candidates) {
+        throw new Error("Бұл API-ден тапсырмалар тізімі табылмады. Күтілетін пішім: массив немесе { todos: [...] }.");
+      }
+
+      const normalized = candidates.flatMap((item) => {
+        if (!item || typeof item !== "object") return [];
+        const text = item.todo ?? item.task ?? item.title ?? item.name;
+        if (typeof text !== "string" || !text.trim()) return [];
+        return [{
+          id: item.id === undefined || item.id === null ? createId("api") : `api-${String(item.id)}`,
+          text: text.trim(),
+          completed: item.completed === true || item.completed === 1 || item.completed === "true"
+        }];
+      });
+      if (candidates.length > 0 && normalized.length === 0) {
+        throw new Error("API тізімі бар, бірақ тапсырма атаулары оқылмады. todo, task немесе title өрісін тексеріңіз.");
+      }
+      return normalized;
+    }
+
+    function readSavedTasks(source) {
+      const saved = localStorage.getItem(storageKey(source));
+      if (!saved) return null;
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed) || parsed.some((task) =>
+        !task || typeof task.id !== "string" || typeof task.text !== "string" || typeof task.completed !== "boolean"
+      )) {
+        throw new Error("Браузерде сақталған тапсырма деректері жарамсыз.");
+      }
+      return parsed;
+    }
+
+    function render() {
+      const visibleTasks = tasks.filter((task) =>
+        currentFilter === "all" ||
+        (currentFilter === "active" && !task.completed) ||
+        (currentFilter === "completed" && task.completed)
+      );
+      elements.taskList.replaceChildren();
+      elements.emptyState.hidden = visibleTasks.length > 0;
+
+      for (const task of visibleTasks) {
+        const row = document.createElement("li");
+        row.className = `task${task.completed ? " completed" : ""}`;
+        row.dataset.id = task.id;
+
+        const check = document.createElement("button");
+        check.type = "button";
+        check.className = "check-button";
+        check.setAttribute("aria-label", task.completed ? "Орындалмаған деп белгілеу" : "Орындалды деп белгілеу");
+        check.title = check.getAttribute("aria-label");
+        check.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+        check.addEventListener("click", () => toggleTask(task.id));
+        row.append(check);
+
+        if (editingId === task.id) {
+          const form = document.createElement("form");
+          form.className = "edit-form";
+          const input = document.createElement("input");
+          input.type = "text";
+          input.maxLength = 500;
+          input.value = task.text;
+          input.setAttribute("aria-label", "Тапсырманы өңдеу");
+          input.required = true;
+          const save = document.createElement("button");
+          save.type = "submit";
+          save.className = "save-edit";
+          save.textContent = "Сақтау";
+          const cancel = document.createElement("button");
+          cancel.type = "button";
+          cancel.className = "cancel-edit";
+          cancel.textContent = "Болдырмау";
+          cancel.addEventListener("click", () => { editingId = null; render(); });
+          form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const text = input.value.trim();
+            if (!text) { input.focus(); return; }
+            tasks = tasks.map((item) => item.id === task.id ? { ...item, text } : item);
+            editingId = null;
+            saveTasks();
+            render();
+          });
+          form.append(input, save, cancel);
+          row.append(form);
+          requestAnimationFrame(() => input.focus());
+        } else {
+          const text = document.createElement("span");
+          text.className = "task-text";
+          text.textContent = task.text;
+          row.append(text);
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.className = "icon-button";
+          edit.title = "Өңдеу";
+          edit.setAttribute("aria-label", "Тапсырманы өңдеу");
+          edit.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4.5-1L20 7.5a2.8 2.8 0 0 0-4-4L4.5 15 4 20Z"/></svg>';
+          edit.addEventListener("click", () => { editingId = task.id; render(); });
+
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "icon-button delete";
+          remove.title = "Өшіру";
+          remove.setAttribute("aria-label", "Тапсырманы өшіру");
+          remove.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V4h6v2m-9 0 1 14h10l1-14M10 10v7m4-7v7"/></svg>';
+          remove.addEventListener("click", () => deleteTask(task.id));
+          actions.append(edit, remove);
+          row.append(actions);
+        }
+
+        elements.taskList.append(row);
+      }
+
+      const completed = tasks.filter((task) => task.completed).length;
+      elements.totalCount.textContent = String(tasks.length);
+      elements.activeCount.textContent = String(tasks.length - completed);
+      elements.completedCount.textContent = String(completed);
+      elements.addButton.disabled = !currentSource || !elements.newTask.value.trim();
+      elements.newTask.disabled = !currentSource;
+    }
+
+    function toggleTask(id) {
+      tasks = tasks.map((task) => task.id === id ? { ...task, completed: !task.completed } : task);
+      saveTasks();
+      render();
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter((task) => task.id !== id);
+      if (editingId === id) editingId = null;
+      saveTasks();
+      render();
+    }
+
+    async function loadApi(source, useSavedData = false) {
+      let url;
+      try {
+        url = new URL(source);
+      } catch {
+        showMessage("API сілтемесінің пішімі дұрыс емес. Толық https:// сілтемесін енгізіңіз.", "error");
+        return;
+      }
+      if (!["https:", "http:"].includes(url.protocol)) {
+        showMessage("API сілтемесі http:// немесе https:// арқылы басталуы керек.", "error");
+        return;
+      }
+
+      elements.loadButton.disabled = true;
+      elements.apiUrl.value = source;
+      hideMessage();
+      try {
+        if (useSavedData) {
+          const savedTasks = readSavedTasks(source);
+          if (savedTasks) {
+            tasks = savedTasks;
+            currentSource = source;
+            editingId = null;
+            render();
+            elements.sourceLabel.hidden = false;
+            elements.sourceUrl.textContent = source;
+            showMessage(`${tasks.length} тапсырма браузерде сақталған күйінен ашылды.`, "success");
+            return;
+          }
+        }
+
+        const response = await fetch(url.href, { headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error(`API сұрауы сәтсіз аяқталды (HTTP ${response.status}).`);
+        const payload = await response.json();
+        const loadedTasks = normalizeTodos(payload);
+        tasks = loadedTasks;
+        currentSource = source;
+        editingId = null;
+        let sourceSaved = true;
+        try {
+          localStorage.setItem(SOURCE_KEY, source);
+        } catch (error) {
+          sourceSaved = false;
+          showMessage(`API тізімі жүктелді, бірақ дереккөз браузерде сақталмады: ${error.message}`, "error");
+        }
+        const tasksSaved = saveTasks();
+        render();
+        elements.sourceLabel.hidden = false;
+        elements.sourceUrl.textContent = source;
+        if (sourceSaved && tasksSaved) {
+          showMessage(`${tasks.length} тапсырма жүктелді.`, "success");
+        }
+      } catch (error) {
+        showMessage(`Тапсырмалар жүктелмеді: ${error.message} API сілтемесін және интернет байланысын тексеріңіз.`, "error");
+      } finally {
+        elements.loadButton.disabled = false;
+      }
+    }
+
+    elements.apiForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const source = elements.apiUrl.value.trim();
+      if (source) loadApi(source);
+    });
+
+    document.querySelectorAll(".example").forEach((button) => {
+      button.addEventListener("click", () => {
+        elements.apiUrl.value = button.dataset.api;
+        loadApi(button.dataset.api);
+      });
+    });
+
+    elements.addForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = elements.newTask.value.trim();
+      if (!text || !currentSource) return;
+      tasks.unshift({ id: createId(), text, completed: false });
+      elements.newTask.value = "";
+      currentFilter = "all";
+      document.querySelectorAll(".filter").forEach((button) => {
+        button.classList.toggle("active", button.dataset.filter === currentFilter);
+      });
+      saveTasks();
+      render();
+      elements.newTask.focus();
+    });
+    elements.newTask.addEventListener("input", () => {
+      elements.addButton.disabled = !elements.newTask.value.trim() || !currentSource;
+    });
+
+    document.querySelectorAll(".filter").forEach((button) => {
+      button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+        document.querySelectorAll(".filter").forEach((item) => {
+          const selected = item === button;
+          item.classList.toggle("active", selected);
+          item.setAttribute("aria-pressed", String(selected));
+        });
+        render();
+      });
+    });
+
+    elements.clearCompleted.addEventListener("click", () => {
+      tasks = tasks.filter((task) => !task.completed);
+      editingId = null;
+      saveTasks();
+      render();
+    });
+
+    let savedSource = DEFAULT_API;
+    try {
+      savedSource = localStorage.getItem(SOURCE_KEY) || DEFAULT_API;
+    } catch (error) {
+      showMessage(`Браузер жадына кіру мүмкін болмады: ${error.message}`, "error");
+    }
+    loadApi(savedSource, true);
+  </script>
+</body>
+</html>
