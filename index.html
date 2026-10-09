@@ -50,7 +50,7 @@
     .load-button:hover, .add-button:hover { background: var(--green-dark); }
     .load-button:disabled { cursor: wait; opacity: .65; }
     .load-button svg, .add-button svg { width: 18px; height: 18px; }
-    .examples { margin-top: 15px; }
+    .examples { margin: 14px 0 0; }
     .examples-title { margin: 0 0 8px; color: #747d76; font-size: 11px; font-weight: 650; }
     .example-list { display: flex; flex-wrap: wrap; gap: 7px; }
     .example { border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; color: #465149; background: #fff; font-size: 11px; }
@@ -103,6 +103,7 @@
     .site-tab:hover { color: #27342b; background: #f4f6f3; }
     .site-tab.active { color: var(--green-dark); background: #eef5ef; }
     .tab-panel[hidden] { display: none; }
+    #existing-panel { display: none !important; }
     .api-workspace { padding-top: 2px; }
     .api-workspace-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
     .api-workspace-heading h1 { font-size: clamp(28px, 6vw, 38px); }
@@ -148,12 +149,7 @@
       <time class="today" id="today"></time>
     </header>
 
-    <nav class="site-tabs" role="tablist" aria-label="Бөлімдер">
-      <button class="site-tab active" id="tab-existing" type="button" role="tab" aria-selected="true" aria-controls="existing-panel">Жоспар</button>
-      <button class="site-tab" id="tab-api" type="button" role="tab" aria-selected="false" aria-controls="api-panel" tabindex="-1">API</button>
-    </nav>
-
-    <div class="tab-panel" id="existing-panel" role="tabpanel" aria-labelledby="tab-existing">
+    <div class="tab-panel" id="existing-panel" role="tabpanel">
     <section class="intro">
       <p class="eyebrow">ЖОСПАРЛА • ОРЫНДА • БЕЛГІЛЕ</p>
       <h1>Бүгін не істейміз?</h1>
@@ -214,10 +210,19 @@
     <p class="footer">Жеке жоспарыңыз — осы браузерде сақталады.</p>
     </div>
 
-    <section class="tab-panel api-workspace" id="api-panel" role="tabpanel" aria-labelledby="tab-api" hidden>
+    <section class="tab-panel api-workspace" id="api-panel" role="tabpanel">
       <div class="api-workspace-heading">
         <h1>API</h1>
         <button class="refresh-button" id="api-refresh" type="button">Обновить список</button>
+      </div>
+      <div class="examples">
+        <p class="examples-title">Примеры ссылок</p>
+        <div class="example-list">
+          <button class="example" type="button" data-api-url="https://dummyjson.com/todos">DummyJSON · все задачи</button>
+          <button class="example" type="button" data-api-url="https://dummyjson.com/todos?limit=10">DummyJSON · первые 10</button>
+          <button class="example" type="button" data-api-url="https://jsonplaceholder.typicode.com/todos">JSONPlaceholder</button>
+          <button class="example" type="button" data-api-url="https://jsonplaceholder.typicode.com/users/1/todos">JSONPlaceholder · 1 пользователь</button>
+        </div>
       </div>
       <div class="stats" aria-label="Статистика задач">
         <div class="stat"><span class="stat-label">Всего задач</span><strong id="api-total-count">0</strong></div>
@@ -282,8 +287,6 @@
       clearCompleted: document.querySelector("#clear-completed")
     };
     const apiElements = {
-      tab: document.querySelector("#tab-api"),
-      existingTab: document.querySelector("#tab-existing"),
       panel: document.querySelector("#api-panel"),
       existingPanel: document.querySelector("#existing-panel"),
       refresh: document.querySelector("#api-refresh"),
@@ -308,6 +311,7 @@
     let apiLoaded = false;
     let apiLoading = false;
     let apiEditingId = null;
+    let currentApiUrl = API_TASKS_URL;
 
     const now = new Date();
     const weekdays = ["Жексенбі", "Дүйсенбі", "Сейсенбі", "Сәрсенбі", "Бейсенбі", "Жұма", "Сенбі"];
@@ -331,35 +335,25 @@
       apiElements.message.hidden = !text;
     }
 
-    function setActiveTab(tab) {
-      const isApi = tab === "api";
-      apiElements.tab.classList.toggle("active", isApi);
-      apiElements.tab.setAttribute("aria-selected", String(isApi));
-      apiElements.tab.tabIndex = isApi ? 0 : -1;
-      apiElements.existingTab.classList.toggle("active", !isApi);
-      apiElements.existingTab.setAttribute("aria-selected", String(!isApi));
-      apiElements.existingTab.tabIndex = isApi ? -1 : 0;
-      apiElements.panel.hidden = !isApi;
-      apiElements.existingPanel.hidden = isApi;
-      if (isApi) loadApiTasks();
-    }
-
-    async function loadApiTasks() {
+    async function loadApiTasks(url = currentApiUrl) {
       if (apiLoading) return;
       apiLoading = true;
+      currentApiUrl = url;
       apiElements.refresh.disabled = true;
       showApiTaskMessage("");
       try {
-        const response = await fetch(API_TASKS_URL, { headers: { Accept: "application/json" } });
+        const response = await fetch(url, { headers: { Accept: "application/json" } });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
-        if (!payload || !Array.isArray(payload.todos)) throw new Error("Unexpected response");
-        apiTasks = payload.todos.slice(0, 30).map((item) => {
-          if (!item || (typeof item.id !== "number" && typeof item.id !== "string") ||
-              typeof item.todo !== "string" || typeof item.completed !== "boolean") {
-            throw new Error("Invalid task");
-          }
-          return { id: item.id, todo: item.todo, completed: item.completed, isLocal: false };
+        const sourceList = Array.isArray(payload) ? payload : Array.isArray(payload?.todos) ? payload.todos : Array.isArray(payload?.data) ? payload.data : [];
+        if (!sourceList.length) throw new Error("Unexpected response");
+        apiTasks = sourceList.slice(0, 30).map((item) => {
+          if (!item || typeof item !== "object") throw new Error("Invalid task");
+          const id = item.id;
+          const todo = typeof item.todo === "string" ? item.todo : typeof item.title === "string" ? item.title : (typeof item.task === "string" ? item.task : "");
+          const completed = typeof item.completed === "boolean" ? item.completed : Boolean(item.completed);
+          if ((typeof id !== "number" && typeof id !== "string") || !todo.trim()) throw new Error("Invalid task");
+          return { id, todo: todo.trim(), completed, isLocal: false };
         });
         apiLoaded = true;
         apiEditingId = null;
@@ -393,10 +387,15 @@
         checkbox.disabled = !apiLoaded;
         checkbox.setAttribute("aria-label", `Выполнено: ${task.todo}`);
         checkbox.addEventListener("change", async () => {
+          const snapshot = { ...task };
+          const nextCompleted = checkbox.checked;
           checkbox.disabled = true;
-          const updated = await updateApiTask(task, { completed: checkbox.checked });
-          if (!updated) {
-            checkbox.checked = task.completed;
+          try {
+            const updated = await updateApiTask(snapshot, { completed: nextCompleted });
+            if (!updated) {
+              checkbox.checked = snapshot.completed;
+            }
+          } finally {
             checkbox.disabled = false;
           }
         });
@@ -488,6 +487,10 @@
     }
 
     async function updateApiTask(task, changes) {
+      if (!task || task.id === undefined || task.id === null) {
+        showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
+        return false;
+      }
       showApiTaskMessage("");
       let useLocalFallback = false;
       try {
@@ -496,7 +499,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(changes)
         });
-        useLocalFallback = task.isLocal && response.status === 404;
+        useLocalFallback = Boolean(task.isLocal) && response.status === 404;
         if (!response.ok && !useLocalFallback) throw new Error(`HTTP ${response.status}`);
       } catch {
         showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
@@ -527,18 +530,10 @@
       showApiTaskMessage(useLocalFallback ? "Задача удалена из списка." : "Задача удалена.", "success");
     }
 
-    apiElements.tab.addEventListener("click", () => setActiveTab("api"));
-    apiElements.existingTab.addEventListener("click", () => setActiveTab("existing"));
-    [apiElements.tab, apiElements.existingTab].forEach((tabButton) => {
-      tabButton.addEventListener("keydown", (event) => {
-        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
-        event.preventDefault();
-        const nextTab = event.currentTarget === apiElements.tab ? apiElements.existingTab : apiElements.tab;
-        setActiveTab(nextTab === apiElements.tab ? "api" : "existing");
-        nextTab.focus();
-      });
+    apiElements.refresh.addEventListener("click", () => loadApiTasks(currentApiUrl));
+    document.querySelectorAll("#api-panel [data-api-url]").forEach((button) => {
+      button.addEventListener("click", () => loadApiTasks(button.dataset.apiUrl));
     });
-    apiElements.refresh.addEventListener("click", loadApiTasks);
     document.querySelectorAll("[data-api-filter]").forEach((button) => {
       button.addEventListener("click", () => {
         apiFilter = button.dataset.apiFilter;
@@ -876,6 +871,9 @@
       showMessage(`Браузер жадына кіру мүмкін болмады: ${error.message}`, "error");
     }
     loadApi(savedSource, true);
+    loadApiTasks();
+    document.getElementById("existing-panel").hidden = true;
+    document.getElementById("api-panel").hidden = false;
   </script>
 </body>
 </html>
