@@ -110,6 +110,7 @@
     .current-member { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 12px 15px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
     .current-member label { color: var(--muted); font-size: 12px; }
     .current-member select { max-width: 65%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; color: #354039; background: #fff; font-size: 12px; }
+    .current-member-id { flex: 0 0 auto; padding: 6px 9px; border-radius: 8px; color: var(--green-dark); background: #eef5ef; font-size: 12px; font-weight: 700; }
     .refresh-button { padding: 9px 12px; border: 1px solid var(--border); border-radius: 9px; color: #465149; background: #fff; font-size: 12px; }
     .refresh-button:hover { border-color: #a9c3b0; color: var(--green-dark); }
     .refresh-button:disabled { cursor: wait; opacity: .6; }
@@ -250,6 +251,7 @@
       <div class="current-member">
         <label for="current-member-select">Кто сейчас работает с задачами?</label>
         <select id="current-member-select" aria-label="Текущий участник"></select>
+        <span class="current-member-id" id="current-member-id" aria-live="polite"></span>
       </div>
       <div class="examples">
         <p class="examples-title">Примеры ссылок</p>
@@ -371,7 +373,8 @@
       activityEmpty: document.querySelector("#user-activity-empty"),
       profileStatus: document.querySelector("#user-profile-status"),
       profile: document.querySelector("#user-profile"),
-      memberSelect: document.querySelector("#current-member-select")
+      memberSelect: document.querySelector("#current-member-select"),
+      memberBadge: document.querySelector("#current-member-id")
     };
 
     let tasks = [];
@@ -406,6 +409,7 @@
       apiElements.memberSelect.append(option);
     }
     apiElements.memberSelect.value = selectedMemberId;
+    apiElements.memberBadge.textContent = `Выбран ID ${selectedMemberId}`;
 
     try {
       const savedActivity = localStorage.getItem(USER_ACTIVITY_KEY);
@@ -447,9 +451,13 @@
 
     function recordUserActivity(task, action, todo, previousTodo = "") {
       if (!GROUP_MEMBERS.some((member) => member.id === selectedMemberId)) return false;
+      const taskKey = String(task.taskKey ?? task.id);
+      const ownerId = getTaskOwnerId(task);
+      if (ownerId && ownerId !== selectedMemberId) return false;
       const entry = {
         userId: selectedMemberId,
         taskId: String(task.id),
+        taskKey,
         action,
         todo,
         previousTodo,
@@ -466,6 +474,14 @@
         renderUserActivity(entry.userId);
       }
       return true;
+    }
+
+    function getTaskOwnerId(task) {
+      const taskKey = String(task.taskKey ?? task.id);
+      return userActivity
+        .filter((entry) => String(entry.taskKey ?? entry.taskId) === taskKey &&
+          GROUP_MEMBERS.some((member) => member.id === entry.userId))
+        .sort((left, right) => Date.parse(left.timestamp) - Date.parse(right.timestamp))[0]?.userId ?? null;
     }
 
     function renderUserActivity(userId) {
@@ -552,6 +568,7 @@
           if ((typeof id !== "number" && typeof id !== "string") || !todo.trim()) throw new Error("Invalid task");
           return {
             id,
+            taskKey: String(id),
             todo: todo.trim(),
             completed,
             userId: typeof item.userId === "number" || typeof item.userId === "string" ? item.userId : null,
@@ -581,13 +598,16 @@
       for (const task of visibleTasks) {
         const row = document.createElement("li");
         row.className = `task${task.completed ? " completed" : ""}`;
-        row.dataset.id = String(task.id);
+        row.dataset.id = String(task.taskKey ?? task.id);
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.className = "api-checkbox";
         checkbox.checked = task.completed;
-        checkbox.disabled = !apiLoaded;
+        const ownerId = getTaskOwnerId(task);
+        const canEditTask = !ownerId || ownerId === selectedMemberId;
+        checkbox.disabled = !apiLoaded || !canEditTask;
+        if (!canEditTask) checkbox.title = `Тапсырма назначена участнику ID ${ownerId}`;
         checkbox.setAttribute("aria-label", `Выполнено: ${task.todo}`);
         checkbox.addEventListener("change", async () => {
           const snapshot = { ...task };
@@ -605,23 +625,17 @@
         const owner = document.createElement("div");
         owner.className = "task-owner";
         owner.append(checkbox);
-        const actors = [...new Set(userActivity
-          .filter((entry) => entry.taskId === String(task.id) &&
-            GROUP_MEMBERS.some((member) => member.id === entry.userId))
-          .map((entry) => entry.userId))];
-        if (actors.length > 0) {
+        if (ownerId) {
           const memberIds = document.createElement("div");
           memberIds.className = "task-member-ids";
-          for (const memberId of actors) {
-            const userLink = document.createElement("button");
-            userLink.type = "button";
-            userLink.className = "user-id-link";
-            userLink.textContent = `ID ${memberId}`;
-            userLink.title = `Открыть профиль и историю участника ${memberId}`;
-            userLink.setAttribute("aria-label", `Открыть профиль пользователя ${memberId}`);
-            userLink.addEventListener("click", () => openUserProfile(memberId, userLink));
-            memberIds.append(userLink);
-          }
+          const userLink = document.createElement("button");
+          userLink.type = "button";
+          userLink.className = "user-id-link";
+          userLink.textContent = `ID ${ownerId}`;
+          userLink.title = `Открыть профиль и историю участника ${ownerId}`;
+          userLink.setAttribute("aria-label", `Открыть профиль пользователя ${ownerId}`);
+          userLink.addEventListener("click", () => openUserProfile(ownerId, userLink));
+          memberIds.append(userLink);
           owner.append(memberIds);
         }
         row.append(owner);
@@ -683,7 +697,8 @@
           edit.title = "Редактировать";
           edit.setAttribute("aria-label", "Редактировать задачу");
           edit.textContent = "✏️";
-          edit.disabled = !apiLoaded;
+          edit.disabled = !apiLoaded || !canEditTask;
+          if (!canEditTask) edit.title = `Тапсырма назначена участнику ID ${ownerId}`;
           edit.addEventListener("click", () => {
             apiEditingId = String(task.id);
             renderApiTasks();
@@ -695,7 +710,8 @@
           remove.title = "Удалить";
           remove.setAttribute("aria-label", "Удалить задачу");
           remove.textContent = "🗑️";
-          remove.disabled = !apiLoaded;
+          remove.disabled = !apiLoaded || !canEditTask;
+          if (!canEditTask) remove.title = `Тапсырма назначена участнику ID ${ownerId}`;
           remove.addEventListener("click", () => deleteApiTask(task));
           actions.append(edit, remove);
           row.append(actions);
@@ -714,6 +730,11 @@
     async function updateApiTask(task, changes) {
       if (!task || task.id === undefined || task.id === null) {
         showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
+        return false;
+      }
+      const ownerId = getTaskOwnerId(task);
+      if (ownerId && ownerId !== selectedMemberId) {
+        showApiTaskMessage(`Эта задача закреплена за участником ID ${ownerId}.`, "error");
         return false;
       }
       showApiTaskMessage("");
@@ -737,7 +758,9 @@
       } else if (Object.hasOwn(changes, "completed")) {
         activitySaved = recordUserActivity(task, changes.completed ? "completed" : "reopened", task.todo);
       }
-      apiTasks = apiTasks.map((item) => item.id === task.id ? { ...item, ...changes } : item);
+      apiTasks = apiTasks.map((item) =>
+        String(item.taskKey ?? item.id) === String(task.taskKey ?? task.id) ? { ...item, ...changes } : item
+      );
       renderApiTasks();
       if (activitySaved) {
         showApiTaskMessage(useLocalFallback ? "Изменения сохранены в этом списке." : "Задача изменена.", "success");
@@ -746,6 +769,11 @@
     }
 
     async function deleteApiTask(task) {
+      const ownerId = getTaskOwnerId(task);
+      if (ownerId && ownerId !== selectedMemberId) {
+        showApiTaskMessage(`Эта задача закреплена за участником ID ${ownerId}.`, "error");
+        return;
+      }
       showApiTaskMessage("");
       let useLocalFallback = false;
       try {
@@ -757,7 +785,9 @@
         return;
       }
 
-      apiTasks = apiTasks.filter((item) => item.id !== task.id);
+      apiTasks = apiTasks.filter((item) =>
+        String(item.taskKey ?? item.id) !== String(task.taskKey ?? task.id)
+      );
       if (apiEditingId === String(task.id)) apiEditingId = null;
       renderApiTasks();
       showApiTaskMessage(useLocalFallback ? "Задача удалена из списка." : "Задача удалена.", "success");
@@ -774,6 +804,9 @@
     });
     apiElements.memberSelect.addEventListener("change", () => {
       selectedMemberId = apiElements.memberSelect.value;
+      apiElements.memberBadge.textContent = `Выбран ID ${selectedMemberId}`;
+      apiEditingId = null;
+      renderApiTasks();
       try {
         localStorage.setItem(CURRENT_MEMBER_KEY, selectedMemberId);
         showApiTaskMessage(`Текущий участник: ID ${selectedMemberId}.`, "success");
@@ -819,6 +852,7 @@
         }
         const newTask = {
           id: created.id,
+          taskKey: `local-${created.id}-${Date.now()}-${taskCounter += 1}`,
           todo,
           completed: false,
           userId: Number(selectedMemberId),
