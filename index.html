@@ -131,6 +131,12 @@
     .http-info summary { padding: 12px 15px; color: #465149; cursor: pointer; font-size: 12px; font-weight: 650; }
     .http-info-content { padding: 0 15px 14px; color: var(--muted); font-size: 11px; line-height: 1.65; }
     .http-info-content p { margin: 5px 0; }
+    .http-last-request { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; overflow-wrap: anywhere; }
+    .http-last-request strong { color: #354039; }
+    .http-request-list { display: grid; gap: 6px; max-height: 140px; margin: 0; padding: 0 15px 14px 32px; overflow-y: auto; color: #465149; font-size: 11px; }
+    .http-request-list li { overflow-wrap: anywhere; }
+    .http-status-ok { color: var(--green-dark); font-weight: 700; }
+    .http-status-error { color: #b33d35; font-weight: 700; }
     .user-id-link { padding: 0; border: 0; color: var(--green-dark); background: transparent; font-size: 10px; line-height: 1.2; }
     .user-id-link:hover { text-decoration: underline; }
     .user-dialog { width: min(760px, calc(100% - 28px)); max-width: none; max-height: min(720px, calc(100% - 32px)); padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 17px; color: #202923; background: #f6f7f5; box-shadow: 0 24px 80px #14201938; }
@@ -148,6 +154,7 @@
     .user-activity-text { margin: 0; color: #465149; font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
     .user-activity-time { display: block; margin-top: 7px; color: var(--muted); font-size: 10px; }
     .user-profile { display: grid; gap: 10px; margin: 0; }
+    .user-profile-avatar { display: block; width: 104px; height: 104px; margin: 0 auto 14px; border: 3px solid #e5eee7; border-radius: 50%; object-fit: cover; background: #eef5ef; }
     .user-profile div { padding-bottom: 8px; border-bottom: 1px solid #eef0ed; }
     .user-profile dt { margin-bottom: 3px; color: var(--muted); font-size: 10px; }
     .user-profile dd { margin: 0; color: #354039; font-size: 12px; overflow-wrap: anywhere; }
@@ -286,6 +293,11 @@
         <div class="empty" id="api-empty-state" hidden><strong>Задач пока нет</strong>Обновите список или добавьте новую задачу.</div>
       </section>
       <p class="api-task-message" id="api-task-message" role="status" aria-live="polite" hidden></p>
+      <p class="http-last-request" id="http-last-request" aria-live="polite"></p>
+      <details class="http-info" open>
+        <summary id="http-log-summary">HTTP-запросы</summary>
+        <ol class="http-request-list" id="http-request-list"></ol>
+      </details>
       <details class="http-info">
         <summary>HTTP-методы и коды ответов</summary>
         <div class="http-info-content">
@@ -331,10 +343,10 @@
     const USER_ACTIVITY_KEY = "ister-tizimi:user-activity";
     const CURRENT_MEMBER_KEY = "ister-tizimi:current-member";
     const GROUP_MEMBERS = [
-      { id: "1", name: "Bolat Adilzhan", university: "Astana International University", role: "IT студенті · Web Developer" },
-      { id: "2", name: "Esen Abdukarim", university: "Astana International University", role: "IT студенті · Web Developer" },
-      { id: "3", name: "Balorazkyzy Assemay", university: "Astana International University", role: "IT студенті · Web Designer" },
-      { id: "4", name: "Daulenbaeva Dina", university: "Astana International University", role: "IT студенті · Programmer" }
+      { id: "1", name: "Bolat Adilzhan", university: "Astana International University", role: "IT студенті · Web Developer", photo: "./adilzhan/Adilzhan.jpg.jpeg" },
+      { id: "2", name: "Esen Abdukarim", university: "Astana International University", role: "IT студенті · Web Developer", photo: "./есен/Esen.jpg.jpeg" },
+      { id: "3", name: "Balorazkyzy Assemay", university: "Astana International University", role: "IT студенті · Web Designer", photo: "./assemai/Assemay.jpg.jpeg" },
+      { id: "4", name: "Daulenbaeva Dina", university: "Astana International University", role: "IT студенті · Programmer", photo: "./dina/Dina.jpg.jpeg" }
     ];
     const elements = {
       apiForm: document.querySelector("#api-form"),
@@ -374,7 +386,10 @@
       profileStatus: document.querySelector("#user-profile-status"),
       profile: document.querySelector("#user-profile"),
       memberSelect: document.querySelector("#current-member-select"),
-      memberBadge: document.querySelector("#current-member-id")
+      memberBadge: document.querySelector("#current-member-id"),
+      lastHttpRequest: document.querySelector("#http-last-request"),
+      httpLogSummary: document.querySelector("#http-log-summary"),
+      httpRequestList: document.querySelector("#http-request-list")
     };
 
     let tasks = [];
@@ -392,6 +407,7 @@
     let profileRequestId = 0;
     let profileTrigger = null;
     let selectedMemberId = "1";
+    let httpRequests = [];
 
     try {
       const savedMemberId = localStorage.getItem(CURRENT_MEMBER_KEY);
@@ -447,6 +463,44 @@
       apiElements.message.textContent = text;
       apiElements.message.className = `api-task-message${kind ? ` ${kind}` : ""}`;
       apiElements.message.hidden = !text;
+    }
+
+    function recordHttpRequest(method, url, status, localFallback = false) {
+      const statusClass = localFallback || (typeof status === "number" && status >= 200 && status < 300)
+        ? "http-status-ok"
+        : "http-status-error";
+      const entry = { method, url, status, localFallback, statusClass, timestamp: new Date() };
+      httpRequests.unshift(entry);
+      httpRequests = httpRequests.slice(0, 12);
+      const statusText = localFallback ? "404 — локально обработано" : `${status}`;
+      apiElements.lastHttpRequest.replaceChildren();
+      const label = document.createElement("strong");
+      label.textContent = `${method} · ${statusText}`;
+      apiElements.lastHttpRequest.append(label, document.createTextNode(` ${url}`));
+      apiElements.httpRequestList.replaceChildren();
+      apiElements.httpLogSummary.textContent = `HTTP-запросы · ${httpRequests.length}`;
+      for (const request of httpRequests) {
+        const item = document.createElement("li");
+        const result = document.createElement("span");
+        result.className = request.statusClass;
+        result.textContent = `${request.method} ${request.localFallback ? "404 (локальный fallback)" : request.status}`;
+        item.append(result, document.createTextNode(` ${request.url}`));
+        apiElements.httpRequestList.append(item);
+      }
+      label.className = statusClass;
+    }
+
+    async function fetchWithHttpLog(url, options = {}, localFallback = false) {
+      const method = (options.method || "GET").toUpperCase();
+      try {
+        const response = await fetch(url, options);
+        const isLocalFallback = response.status === 404 && localFallback;
+        recordHttpRequest(method, url, response.status, isLocalFallback);
+        return response;
+      } catch (error) {
+        recordHttpRequest(method, url, "network error");
+        throw error;
+      }
     }
 
     function recordUserActivity(task, action, todo, previousTodo = "") {
@@ -543,6 +597,13 @@
       if (requestId !== profileRequestId) return;
       apiElements.profileStatus.hidden = true;
       apiElements.profile.hidden = false;
+      const avatar = document.createElement("img");
+      avatar.className = "user-profile-avatar";
+      avatar.src = member.photo;
+      avatar.alt = `Фото ${member.name}`;
+      avatar.width = 104;
+      avatar.height = 104;
+      apiElements.profile.append(avatar);
       appendProfileField("ФИО", member.name);
       appendProfileField("Учёба", member.university);
       appendProfileField("Должность", member.role);
@@ -555,7 +616,7 @@
       apiElements.refresh.disabled = true;
       showApiTaskMessage("");
       try {
-        const response = await fetch(url, { headers: { Accept: "application/json" } });
+        const response = await fetchWithHttpLog(url, { headers: { Accept: "application/json" } });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const payload = await response.json();
         const sourceList = Array.isArray(payload) ? payload : Array.isArray(payload?.todos) ? payload.todos : Array.isArray(payload?.data) ? payload.data : [];
@@ -740,11 +801,11 @@
       showApiTaskMessage("");
       let useLocalFallback = false;
       try {
-        const response = await fetch(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, {
+        const response = await fetchWithHttpLog(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(changes)
-        });
+        }, task.isLocal);
         useLocalFallback = Boolean(task.isLocal) && response.status === 404;
         if (!response.ok && !useLocalFallback) throw new Error(`HTTP ${response.status}`);
       } catch {
@@ -777,7 +838,11 @@
       showApiTaskMessage("");
       let useLocalFallback = false;
       try {
-        const response = await fetch(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, { method: "DELETE" });
+        const response = await fetchWithHttpLog(
+          `${API_TASKS_URL}/${encodeURIComponent(task.id)}`,
+          { method: "DELETE" },
+          task.isLocal
+        );
         useLocalFallback = task.isLocal && response.status === 404;
         if (!response.ok && !useLocalFallback) throw new Error(`HTTP ${response.status}`);
       } catch {
@@ -840,7 +905,7 @@
       apiElements.addButton.disabled = true;
       showApiTaskMessage("");
       try {
-        const response = await fetch(`${API_TASKS_URL}/add`, {
+        const response = await fetchWithHttpLog(`${API_TASKS_URL}/add`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ todo, completed: false, userId: Number(selectedMemberId) })
@@ -1075,7 +1140,7 @@
           }
         }
 
-        const response = await fetch(url.href, { headers: { Accept: "application/json" } });
+        const response = await fetchWithHttpLog(url.href, { headers: { Accept: "application/json" } });
         if (!response.ok) throw new Error(`API сұрауы сәтсіз аяқталды (HTTP ${response.status}).`);
         const payload = await response.json();
         const loadedTasks = normalizeTodos(payload);
