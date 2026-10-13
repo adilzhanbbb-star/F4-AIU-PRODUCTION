@@ -465,14 +465,18 @@
       apiElements.message.hidden = !text;
     }
 
-    function recordHttpRequest(method, url, status, localFallback = false) {
-      const statusClass = localFallback || (typeof status === "number" && status >= 200 && status < 300)
+    function recordHttpRequest(method, url, status, localFallback = false, localOnly = false) {
+      const statusClass = localFallback || localOnly || (typeof status === "number" && status >= 200 && status < 300)
         ? "http-status-ok"
         : "http-status-error";
-      const entry = { method, url, status, localFallback, statusClass, timestamp: new Date() };
+      const entry = { method, url, status, localFallback, localOnly, statusClass, timestamp: new Date() };
       httpRequests.unshift(entry);
       httpRequests = httpRequests.slice(0, 12);
-      const statusText = localFallback ? "404 — локально обработано" : `${status}`;
+      const statusText = localOnly
+        ? "локально, HTTP не отправлен"
+        : localFallback
+          ? "404 — локально обработано"
+          : `${status}`;
       apiElements.lastHttpRequest.replaceChildren();
       const label = document.createElement("strong");
       label.textContent = `${method} · ${statusText}`;
@@ -483,7 +487,12 @@
         const item = document.createElement("li");
         const result = document.createElement("span");
         result.className = request.statusClass;
-        result.textContent = `${request.method} ${request.localFallback ? "404 (локальный fallback)" : request.status}`;
+        const resultText = request.localOnly
+          ? "локально (без HTTP)"
+          : request.localFallback
+            ? "404 (локальный fallback)"
+            : request.status;
+        result.textContent = `${request.method} ${resultText}`;
         item.append(result, document.createTextNode(` ${request.url}`));
         apiElements.httpRequestList.append(item);
       }
@@ -501,6 +510,10 @@
         recordHttpRequest(method, url, "network error");
         throw error;
       }
+    }
+
+    function recordLocalOperation(method, task) {
+      recordHttpRequest(method, `DummyJSON не хранит POST-задачу ${task.id}`, "local only", false, true);
     }
 
     function recordUserActivity(task, action, todo, previousTodo = "") {
@@ -799,18 +812,20 @@
         return false;
       }
       showApiTaskMessage("");
-      let useLocalFallback = false;
-      try {
-        const response = await fetchWithHttpLog(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(changes)
-        }, task.isLocal);
-        useLocalFallback = Boolean(task.isLocal) && response.status === 404;
-        if (!response.ok && !useLocalFallback) throw new Error(`HTTP ${response.status}`);
-      } catch {
-        showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
-        return false;
+      if (task.isLocal) {
+        recordLocalOperation("PATCH", task);
+      } else {
+        try {
+          const response = await fetchWithHttpLog(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(changes)
+          });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        } catch {
+          showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
+          return false;
+        }
       }
 
       let activitySaved = true;
@@ -824,7 +839,12 @@
       );
       renderApiTasks();
       if (activitySaved) {
-        showApiTaskMessage(useLocalFallback ? "Изменения сохранены в этом списке." : "Задача изменена.", "success");
+        showApiTaskMessage(
+          task.isLocal
+            ? "Задача изменена локально: DummyJSON не хранит задачи, созданные через POST."
+            : "Задача изменена.",
+          "success"
+        );
       }
       return true;
     }
@@ -836,18 +856,19 @@
         return;
       }
       showApiTaskMessage("");
-      let useLocalFallback = false;
-      try {
-        const response = await fetchWithHttpLog(
-          `${API_TASKS_URL}/${encodeURIComponent(task.id)}`,
-          { method: "DELETE" },
-          task.isLocal
-        );
-        useLocalFallback = task.isLocal && response.status === 404;
-        if (!response.ok && !useLocalFallback) throw new Error(`HTTP ${response.status}`);
-      } catch {
-        showApiTaskMessage("Не удалось удалить задачу. Попробуйте снова.", "error");
-        return;
+      if (task.isLocal) {
+        recordLocalOperation("DELETE", task);
+      } else {
+        try {
+          const response = await fetchWithHttpLog(
+            `${API_TASKS_URL}/${encodeURIComponent(task.id)}`,
+            { method: "DELETE" }
+          );
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        } catch {
+          showApiTaskMessage("Не удалось удалить задачу. Попробуйте снова.", "error");
+          return;
+        }
       }
 
       apiTasks = apiTasks.filter((item) =>
@@ -855,7 +876,12 @@
       );
       if (apiEditingId === String(task.id)) apiEditingId = null;
       renderApiTasks();
-      showApiTaskMessage(useLocalFallback ? "Задача удалена из списка." : "Задача удалена.", "success");
+      showApiTaskMessage(
+        task.isLocal
+          ? "Задача удалена локально: DummyJSON не хранит задачи, созданные через POST."
+          : "Задача удалена.",
+        "success"
+      );
     }
 
     apiElements.dialogClose.addEventListener("click", () => apiElements.dialog.close());
