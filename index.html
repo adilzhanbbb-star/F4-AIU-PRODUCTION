@@ -91,22 +91,17 @@
     .icon-button:hover { border-color: var(--border); color: #354039; background: #fff; }
     .icon-button.delete:hover { border-color: #f1d8d5; color: #b33d35; background: #fff8f7; }
     .edit-form { display: flex; flex: 1; gap: 8px; }
-    .edit-form input { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #cbd9ce; border-radius: 8px; outline: none; }
-    .edit-form input:focus { border-color: var(--green); }
+    .edit-form input, .edit-form select { flex: 1; min-width: 0; padding: 8px 10px; border: 1px solid #cbd9ce; border-radius: 8px; outline: none; background: #fff; }
+    .edit-form input:focus, .edit-form select:focus { border-color: var(--green); }
     .save-edit { padding: 7px 10px; border: 0; border-radius: 8px; color: #fff; background: var(--green); font-size: 12px; }
     .cancel-edit { padding: 7px; border: 0; color: #778079; background: transparent; font-size: 12px; }
     .empty { padding: 38px 18px; color: var(--muted); text-align: center; font-size: 13px; }
     .empty strong { display: block; margin-bottom: 5px; color: #354039; font-size: 14px; }
     .footer { margin-top: 18px; color: #929a94; text-align: center; font-size: 11px; }
-    .site-tabs { display: flex; gap: 6px; margin: -28px 0 28px; padding: 5px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
-    .site-tab { flex: 1; padding: 9px 12px; border: 0; border-radius: 8px; color: #778079; background: transparent; font-size: 13px; font-weight: 650; }
-    .site-tab:hover { color: #27342b; background: #f4f6f3; }
-    .site-tab.active { color: var(--green-dark); background: #eef5ef; }
-    .tab-panel[hidden] { display: none; }
-    #existing-panel { display: none !important; }
     .api-workspace { padding-top: 2px; }
     .api-workspace-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
     .api-workspace-heading h1 { font-size: clamp(28px, 6vw, 38px); }
+    .api-workspace-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
     .current-member { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 12px 15px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
     .current-member label { color: var(--muted); font-size: 12px; }
     .current-member select { max-width: 65%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; color: #354039; background: #fff; font-size: 12px; }
@@ -115,13 +110,19 @@
     .refresh-button:hover { border-color: #a9c3b0; color: var(--green-dark); }
     .refresh-button:disabled { cursor: wait; opacity: .6; }
     .api-task-form .add-button { width: auto; padding: 0 13px; font-size: 12px; }
+    .api-task-form select { flex: 0 0 auto; max-width: 165px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; color: #465149; background: #fff; font-size: 11px; }
+    .api-task-assignment { margin: 0 0 9px; color: var(--muted); font-size: 11px; }
     .api-toolbar { justify-content: flex-start; }
+    .api-task-sort { margin-left: auto; padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: #465149; background: #fff; font-size: 11px; }
     .api-task-list .task { display: block; min-height: 0; padding: 12px 16px; }
     .api-task-main { display: flex; align-items: center; gap: 12px; min-height: 36px; }
     .api-checkbox { flex: 0 0 auto; width: 17px; height: 17px; accent-color: var(--green); cursor: pointer; }
     .api-checkbox:disabled { cursor: wait; opacity: .6; }
     .api-task-list .task-text { text-decoration: none; }
     .api-task-list .completed .task-text { color: #849087; text-decoration: line-through; }
+    .api-task-status { flex: 0 0 auto; padding: 4px 7px; border-radius: 999px; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .api-task-status.in-progress { color: #8a5a0a; background: #fff5dc; }
+    .api-task-status.completed { color: var(--green-dark); background: #eaf5ec; }
     .api-task-list .icon-button { font-size: 15px; }
     .api-task-message { min-height: 18px; margin: 10px 2px 0; font-size: 12px; }
     .api-task-message.error { color: #b33d35; }
@@ -129,6 +130,7 @@
     .task-owner { display: flex; flex: 0 0 auto; align-items: center; }
     .task-user-card { display: inline-flex; align-items: center; gap: 6px; max-width: calc(100% - 29px); margin: 7px 0 0 29px; padding: 4px 8px 4px 5px; border: 1px solid var(--border); border-radius: 8px; color: #465149; background: #f8faf8; text-align: left; }
     .task-user-card:hover { border-color: #a9c3b0; color: var(--green-dark); }
+    .task-user-card:disabled { cursor: default; opacity: .75; }
     .task-user-avatar { width: 22px; height: 22px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; background: #eef5ef; }
     .task-user-label { min-width: 0; overflow: hidden; font-size: 10px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
     .http-info { margin-top: 15px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
@@ -147,9 +149,11 @@
     .user-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border); background: #fff; }
     .user-dialog-header h2 { font-size: 17px; }
     .user-dialog-close { width: 34px; height: 34px; border: 1px solid var(--border); border-radius: 9px; color: #465149; background: #fff; font-size: 20px; line-height: 1; }
-    .user-dialog-grid { display: grid; grid-template-columns: 1fr 1fr; height: min(620px, calc(100dvh - 120px)); min-height: 300px; }
-    .user-dialog-column { min-width: 0; padding: 18px 20px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-    .user-dialog-column + .user-dialog-column { border-left: 1px solid var(--border); background: #fff; }
+    .user-dialog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 12px; height: min(620px, calc(100dvh - 120px)); min-height: 300px; padding: 12px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+    .user-dialog-column { min-width: 0; padding: 18px 20px; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+    .user-dialog-column[aria-labelledby="user-activity-heading"] { grid-column: 2; grid-row: 1; }
+    .user-dialog-column[aria-labelledby="user-profile-heading"] { grid-column: 1; grid-row: 1; }
+    .user-dialog-column + .user-dialog-column { background: #fff; }
     .user-dialog-column h3 { margin: 0 0 13px; font-size: 13px; }
     .user-activity-list { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
     .user-activity-item { padding: 10px 11px; border: 1px solid var(--border); border-radius: 10px; background: #fff; }
@@ -162,6 +166,10 @@
     .user-profile dt { margin-bottom: 3px; color: var(--muted); font-size: 10px; }
     .user-profile dd { margin: 0; color: #354039; font-size: 12px; overflow-wrap: anywhere; }
     .user-profile-status { color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .profile-task-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0; }
+    .profile-task-toolbar .filters { flex-wrap: wrap; }
+    .profile-task-sort { margin-left: auto; padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; color: #465149; background: #fff; font-size: 11px; }
+    .profile-task-status { margin: 8px 0; color: var(--muted); font-size: 11px; }
     .user-history-note { margin: -7px 0 10px; color: var(--muted); font-size: 10px; }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
     @media (max-width: 560px) {
@@ -176,11 +184,12 @@
       .task-text { font-size: 13px; }
       .actions { gap: 1px; }
       .icon-button { width: 29px; height: 29px; }
-      .user-dialog-grid { grid-template-columns: 1fr; height: min(75vh, 620px); min-height: 0; overflow-y: auto; }
-      .user-dialog-column { min-height: 220px; overflow-x: hidden; overflow-y: auto; }
-      .user-dialog-column + .user-dialog-column { border-top: 1px solid var(--border); border-left: 0; }
       .current-member { align-items: flex-start; flex-direction: column; }
       .current-member select { max-width: 100%; width: 100%; }
+      .user-dialog-grid { grid-template-columns: minmax(0, 1fr); height: min(75vh, 620px); min-height: 0; padding: 10px; }
+      .user-dialog-column[aria-labelledby="user-profile-heading"] { grid-column: 1; grid-row: 1; }
+      .user-dialog-column[aria-labelledby="user-activity-heading"] { grid-column: 1; grid-row: 2; }
+      .user-dialog-column { padding: 16px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; } }
   </style>
@@ -192,7 +201,7 @@
       <time class="today" id="today"></time>
     </header>
 
-    <div class="tab-panel" id="existing-panel" role="tabpanel">
+    <div class="tab-panel" id="existing-panel" hidden>
     <section class="intro">
       <p class="eyebrow">ЖОСПАРЛА • ОРЫНДА • БЕЛГІЛЕ</p>
       <h1>Бүгін не істейміз?</h1>
@@ -204,7 +213,7 @@
       <p class="help">Тапсырмалар тізімі бар API сілтемесін енгізіңіз. DummyJSON және JSONPlaceholder форматтары автоматты оқылады.</p>
       <form class="api-form" id="api-form">
         <label class="sr-only" for="api-url">API сілтемесі</label>
-        <input id="api-url" type="url" placeholder="https://dummyjson.com/todos?limit=0" autocomplete="url" required>
+        <input id="api-url" type="url" placeholder="https://dummyjson.com/todos?limit=30" autocomplete="url" required>
         <button class="load-button" id="load-button" type="submit" title="API-ден жүктеу" aria-label="API-ден жүктеу">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
         </button>
@@ -212,7 +221,7 @@
       <div class="examples">
         <p class="examples-title">Мысал сілтемелер — басып, API-ді таңдаңыз</p>
         <div class="example-list">
-          <button class="example" type="button" data-api="https://dummyjson.com/todos?limit=0">DummyJSON · барлық тапсырма</button>
+          <button class="example" type="button" data-api="https://dummyjson.com/todos?limit=30">DummyJSON · алғашқы 30 тапсырма</button>
           <button class="example" type="button" data-api="https://dummyjson.com/todos?limit=10">DummyJSON · алғашқы 10</button>
           <button class="example" type="button" data-api="https://jsonplaceholder.typicode.com/todos">JSONPlaceholder</button>
           <button class="example" type="button" data-api="https://jsonplaceholder.typicode.com/users/1/todos">JSONPlaceholder · 1-пайдаланушы</button>
@@ -253,20 +262,23 @@
     <p class="footer">Жеке жоспарыңыз — осы браузерде сақталады.</p>
     </div>
 
-    <section class="tab-panel api-workspace" id="api-panel" role="tabpanel">
+    <section class="api-workspace" id="api-panel" aria-label="API">
       <div class="api-workspace-heading">
         <h1>API</h1>
-        <button class="refresh-button" id="api-refresh" type="button">Обновить список</button>
+        <div class="api-workspace-actions">
+          <button class="refresh-button" id="api-random" type="button">Кездейсоқ тапсырма</button>
+          <button class="refresh-button" id="api-refresh" type="button">Обновить список</button>
+        </div>
       </div>
       <div class="current-member">
         <label for="current-member-select">Кто сейчас работает с задачами?</label>
         <select id="current-member-select" aria-label="Текущий участник" disabled></select>
-        <span class="current-member-id" id="current-member-id" aria-live="polite"></span>
+        <span class="current-member-id" id="current-member-id" aria-live="polite">Загрузка…</span>
       </div>
       <div class="examples">
         <p class="examples-title">Примеры ссылок</p>
         <div class="example-list">
-          <button class="example" type="button" data-api-url="https://dummyjson.com/todos">DummyJSON · все задачи</button>
+          <button class="example" type="button" data-api-url="https://dummyjson.com/todos?limit=30">DummyJSON · первые 30 задач</button>
           <button class="example" type="button" data-api-url="https://dummyjson.com/todos?limit=10">DummyJSON · первые 10</button>
           <button class="example" type="button" data-api-url="https://jsonplaceholder.typicode.com/todos">JSONPlaceholder</button>
           <button class="example" type="button" data-api-url="https://jsonplaceholder.typicode.com/users/1/todos">JSONPlaceholder · 1 пользователь</button>
@@ -279,9 +291,15 @@
       </div>
       <section class="panel tasks-panel" aria-label="Задачи DummyJSON">
         <div class="add-wrap">
+          <p class="api-task-assignment" id="api-task-assignment">Жаңа тапсырма қолданушы жүктелген соң тағайындалады.</p>
           <form class="add-form api-task-form" id="api-add-form">
             <label class="sr-only" for="api-new-task">Текст новой задачи</label>
             <input id="api-new-task" type="text" maxlength="500" placeholder="Введите новую задачу" required disabled>
+            <label class="sr-only" for="api-new-status">Статус</label>
+            <select id="api-new-status" aria-label="Статус новой задачи" disabled>
+              <option value="false">Орындалмады</option>
+              <option value="true">Орындалды</option>
+            </select>
             <button class="add-button" id="api-add-button" type="submit" disabled>Добавить задачу</button>
           </form>
         </div>
@@ -291,11 +309,23 @@
             <button class="filter" type="button" data-api-filter="completed" aria-pressed="false">Выполненные</button>
             <button class="filter" type="button" data-api-filter="active" aria-pressed="false">Невыполненные</button>
           </div>
+          <label>
+            <span class="sr-only">Сортировка задач по названию</span>
+            <select class="api-task-sort" id="api-task-sort" aria-label="Сортировка задач по алфавиту">
+              <option value="original">Бастапқы рет</option>
+              <option value="asc">А → Я / A → Z</option>
+              <option value="desc">Я → А / Z → A</option>
+            </select>
+          </label>
         </div>
         <ul class="task-list api-task-list" id="api-task-list" aria-live="polite"></ul>
         <div class="empty" id="api-empty-state" hidden><strong>Задач пока нет</strong>Обновите список или добавьте новую задачу.</div>
       </section>
       <p class="api-task-message" id="api-task-message" role="status" aria-live="polite" hidden></p>
+      <details class="http-info">
+        <summary id="api-activity-summary">Әрекеттер тарихы · 0</summary>
+        <ol class="http-request-list" id="api-activity-list"></ol>
+      </details>
       <p class="http-last-request" id="http-last-request" aria-live="polite"></p>
       <details class="http-info" open>
         <summary id="http-log-summary">HTTP-запросы</summary>
@@ -331,6 +361,28 @@
           <h3 id="user-profile-heading">Данные пользователя</h3>
           <p class="user-profile-status" id="user-profile-status" role="status">Загрузка профиля…</p>
           <dl class="user-profile" id="user-profile" hidden></dl>
+          <div class="user-profile-tasks" id="user-profile-tasks" hidden>
+            <h3>Тапсырмалары</h3>
+            <button class="save-edit" id="user-profile-add" type="button">+ Тапсырма қосу</button>
+            <div class="profile-task-toolbar">
+              <div class="filters" role="group" aria-label="Фильтр задач пользователя">
+                <button class="filter active" type="button" data-profile-filter="all" aria-pressed="true">Все</button>
+                <button class="filter" type="button" data-profile-filter="active" aria-pressed="false">В работе</button>
+                <button class="filter" type="button" data-profile-filter="completed" aria-pressed="false">Завершённые</button>
+              </div>
+              <label>
+                <span class="sr-only">Сортировка задач пользователя</span>
+                <select class="profile-task-sort" id="profile-task-sort" aria-label="Сортировка задач пользователя">
+                  <option value="asc">А → Я</option>
+                  <option value="desc">Я → А</option>
+                  <option value="original">Исходный порядок</option>
+                </select>
+              </label>
+            </div>
+            <p class="profile-task-status" id="profile-task-count" aria-live="polite"></p>
+            <p class="user-profile-status" id="user-profile-tasks-status" role="status"></p>
+            <ul class="user-activity-list" id="user-profile-task-list"></ul>
+          </div>
         </section>
       </div>
     </dialog>
@@ -339,12 +391,13 @@
   <script>
     "use strict";
 
-    const DEFAULT_API = "https://dummyjson.com/todos?limit=0";
+    const DEFAULT_API = "https://dummyjson.com/todos?limit=30";
     const API_TASKS_URL = "https://dummyjson.com/todos";
+    const API_TASKS_LIST_URL = "https://dummyjson.com/todos?limit=30";
     const API_USERS_URL = "https://dummyjson.com/users?limit=0";
+    const API_LOCAL_TASKS_KEY = "ister-tizimi:api-local-tasks";
     const TASKS_KEY = "ister-tizimi:tasks:";
     const SOURCE_KEY = "ister-tizimi:source";
-    const USER_ACTIVITY_KEY = "ister-tizimi:user-activity";
     const CURRENT_MEMBER_KEY = "ister-tizimi:current-member";
     const elements = {
       apiForm: document.querySelector("#api-form"),
@@ -373,9 +426,15 @@
       addForm: document.querySelector("#api-add-form"),
       newTask: document.querySelector("#api-new-task"),
       addButton: document.querySelector("#api-add-button"),
+      assignmentNote: document.querySelector("#api-task-assignment"),
+      memberSelect: document.querySelector("#current-member-select"),
+      memberBadge: document.querySelector("#current-member-id"),
       taskList: document.querySelector("#api-task-list"),
       emptyState: document.querySelector("#api-empty-state"),
       message: document.querySelector("#api-task-message"),
+      taskSort: document.querySelector("#api-task-sort"),
+      activitySummary: document.querySelector("#api-activity-summary"),
+      activityLog: document.querySelector("#api-activity-list"),
       dialog: document.querySelector("#user-dialog"),
       dialogTitle: document.querySelector("#user-dialog-title"),
       dialogClose: document.querySelector("#user-dialog-close"),
@@ -383,8 +442,14 @@
       activityEmpty: document.querySelector("#user-activity-empty"),
       profileStatus: document.querySelector("#user-profile-status"),
       profile: document.querySelector("#user-profile"),
-      memberSelect: document.querySelector("#current-member-select"),
-      memberBadge: document.querySelector("#current-member-id"),
+      profileTasks: document.querySelector("#user-profile-tasks"),
+      profileTasksStatus: document.querySelector("#user-profile-tasks-status"),
+      profileTaskList: document.querySelector("#user-profile-task-list"),
+      profileTaskCount: document.querySelector("#profile-task-count"),
+      profileTaskSort: document.querySelector("#profile-task-sort"),
+      profileAdd: document.querySelector("#user-profile-add"),
+      random: document.querySelector("#api-random"),
+      newStatus: document.querySelector("#api-new-status"),
       lastHttpRequest: document.querySelector("#http-last-request"),
       httpLogSummary: document.querySelector("#http-log-summary"),
       httpRequestList: document.querySelector("#http-request-list")
@@ -400,38 +465,23 @@
     let apiLoaded = false;
     let apiLoading = false;
     let apiEditingId = null;
-    let currentApiUrl = API_TASKS_URL;
+    let currentApiUrl = API_TASKS_LIST_URL;
     let userActivity = [];
+    let profileTasks = [];
+    let profileTaskFilter = "all";
+    let profileUserId = null;
+    let profileEditingTaskKey = null;
     let profileRequestId = 0;
     let profileTrigger = null;
-    let selectedMemberId = "1";
     let httpRequests = [];
     let apiUsers = [];
     let usersLoadId = 0;
+    let selectedMemberId = "";
 
     try {
-      const savedMemberId = localStorage.getItem(CURRENT_MEMBER_KEY);
-      if (savedMemberId) selectedMemberId = savedMemberId;
+      selectedMemberId = localStorage.getItem(CURRENT_MEMBER_KEY) || "";
     } catch {
       showApiTaskMessage("Выбор участника не удалось загрузить из браузера.", "error");
-    }
-
-    apiElements.memberBadge.textContent = "Қолданушылар жүктелуде…";
-
-    try {
-      const savedActivity = localStorage.getItem(USER_ACTIVITY_KEY);
-      if (savedActivity) {
-        const parsedActivity = JSON.parse(savedActivity);
-        if (!Array.isArray(parsedActivity) || parsedActivity.some((entry) =>
-          !entry || typeof entry.userId !== "string" || typeof entry.action !== "string" ||
-          typeof entry.todo !== "string" || typeof entry.timestamp !== "string"
-        )) {
-          throw new Error("invalid activity data");
-        }
-        userActivity = parsedActivity;
-      }
-    } catch {
-      showApiTaskMessage("История действий повреждена или недоступна в браузере.", "error");
     }
 
     const now = new Date();
@@ -456,21 +506,50 @@
       apiElements.message.hidden = !text;
     }
 
-    function recordHttpRequest(method, url, status, localFallback = false, localOnly = false) {
-      const statusClass = localFallback || localOnly || (typeof status === "number" && status >= 200 && status < 300)
+    function readLocalApiTasks() {
+      try {
+        const stored = localStorage.getItem(API_LOCAL_TASKS_KEY);
+        if (!stored) return [];
+        const tasks = JSON.parse(stored);
+        if (!Array.isArray(tasks) || tasks.some((task) =>
+          !task || (typeof task.id !== "number" && typeof task.id !== "string") ||
+          typeof task.taskKey !== "string" || typeof task.todo !== "string" ||
+          typeof task.completed !== "boolean" ||
+          (typeof task.userId !== "number" && typeof task.userId !== "string") ||
+          task.isLocal !== true
+        )) {
+          throw new Error("Сақталған тапсырмалар тізімі дұрыс емес.");
+        }
+        return tasks;
+      } catch (error) {
+        showApiTaskMessage(`Локальные задачи не удалось загрузить: ${error.message}`, "error");
+        return [];
+      }
+    }
+
+    function saveLocalApiTasks() {
+      try {
+        localStorage.setItem(
+          API_LOCAL_TASKS_KEY,
+          JSON.stringify(apiTasks.filter((task) => task.isLocal))
+        );
+        return true;
+      } catch (error) {
+        showApiTaskMessage(`Локальные задачи не удалось сохранить: ${error.message}`, "error");
+        return false;
+      }
+    }
+
+    function recordHttpRequest(method, url, status) {
+      const statusClass = typeof status === "number" && status >= 200 && status < 300
         ? "http-status-ok"
         : "http-status-error";
-      const entry = { method, url, status, localFallback, localOnly, statusClass, timestamp: new Date() };
+      const entry = { method, url, status, statusClass, timestamp: new Date() };
       httpRequests.unshift(entry);
       httpRequests = httpRequests.slice(0, 12);
-      const statusText = localOnly
-        ? "локально, HTTP не отправлен"
-        : localFallback
-          ? "404 — локально обработано"
-          : `${status}`;
       apiElements.lastHttpRequest.replaceChildren();
       const label = document.createElement("strong");
-      label.textContent = `${method} · ${statusText}`;
+      label.textContent = `${method} · ${status}`;
       apiElements.lastHttpRequest.append(label, document.createTextNode(` ${url}`));
       apiElements.httpRequestList.replaceChildren();
       apiElements.httpLogSummary.textContent = `HTTP-запросы · ${httpRequests.length}`;
@@ -478,24 +557,18 @@
         const item = document.createElement("li");
         const result = document.createElement("span");
         result.className = request.statusClass;
-        const resultText = request.localOnly
-          ? "локально (без HTTP)"
-          : request.localFallback
-            ? "404 (локальный fallback)"
-            : request.status;
-        result.textContent = `${request.method} ${resultText}`;
+        result.textContent = `${request.method} ${request.status}`;
         item.append(result, document.createTextNode(` ${request.url}`));
         apiElements.httpRequestList.append(item);
       }
       label.className = statusClass;
     }
 
-    async function fetchWithHttpLog(url, options = {}, localFallback = false) {
+    async function fetchWithHttpLog(url, options = {}) {
       const method = (options.method || "GET").toUpperCase();
       try {
         const response = await fetch(url, options);
-        const isLocalFallback = response.status === 404 && localFallback;
-        recordHttpRequest(method, url, response.status, isLocalFallback);
+        recordHttpRequest(method, url, response.status);
         return response;
       } catch (error) {
         recordHttpRequest(method, url, "network error");
@@ -503,38 +576,49 @@
       }
     }
 
-    function recordLocalOperation(method, task) {
-      recordHttpRequest(method, `DummyJSON не хранит POST-задачу ${task.id}`, "local only", false, true);
-    }
-
     function recordUserActivity(task, action, todo, previousTodo = "") {
-      if (!apiUsers.some((user) => String(user.id) === selectedMemberId)) return false;
-      const taskKey = String(task.taskKey ?? task.id);
       const ownerId = getTaskOwnerId(task);
-      if (ownerId && ownerId !== selectedMemberId) return false;
+      if (!ownerId) return false;
       const entry = {
-        userId: selectedMemberId,
+        userId: ownerId,
         taskId: String(task.id),
-        taskKey,
+        taskKey: String(task.taskKey ?? task.id),
         action,
         todo,
         previousTodo,
         timestamp: new Date().toISOString()
       };
       userActivity.push(entry);
-      try {
-        localStorage.setItem(USER_ACTIVITY_KEY, JSON.stringify(userActivity));
-      } catch {
-        showApiTaskMessage("Действие выполнено, но историю не удалось сохранить в браузере.", "error");
-        return false;
-      }
-      if (apiElements.dialog.open && apiElements.dialog.dataset.userId === entry.userId) {
-        renderUserActivity(entry.userId);
-      }
+      userActivity = userActivity.slice(-100);
+      renderActivityLog();
+      renderUserActivity(entry.userId);
       return true;
     }
 
+    function renderActivityLog() {
+      apiElements.activitySummary.textContent = `Әрекеттер тарихы · ${userActivity.length}`;
+      apiElements.activityLog.replaceChildren();
+      for (const entry of [...userActivity].reverse()) {
+        const user = apiUsers.find((item) => String(item.id) === entry.userId);
+        const item = document.createElement("li");
+        const actionNames = {
+          added: "Қосылды",
+          edited: "Өзгертілді",
+          deleted: "Өшірілді",
+          completed: "Орындалды",
+          reopened: "Қайта ашылды"
+        };
+        const time = new Date(entry.timestamp);
+        item.textContent = `${actionNames[entry.action] || "Өзгертілді"} · ${entry.todo} · ${user ? `${user.firstName} ${user.lastName}` : `ID ${entry.userId}`} · ${Number.isNaN(time.getTime()) ? entry.timestamp : time.toLocaleString()}`;
+        apiElements.activityLog.append(item);
+      }
+    }
+
     function getTaskOwnerId(task) {
+      if (task.userId !== undefined && task.userId !== null &&
+        apiUsers.some((user) => String(user.id) === String(task.userId))) {
+        return String(task.userId);
+      }
       const taskKey = String(task.taskKey ?? task.id);
       return userActivity
         .filter((entry) => String(entry.taskKey ?? entry.taskId) === taskKey &&
@@ -555,7 +639,8 @@
         const action = document.createElement("p");
         action.className = "user-activity-action";
         if (entry.action === "added") action.textContent = "Добавил задачу";
-        else if (entry.action === "edited") action.textContent = "Изменил текст задачи";
+        else if (entry.action === "edited") action.textContent = "Изменил задачу";
+        else if (entry.action === "deleted") action.textContent = "Удалил задачу";
         else if (entry.action === "completed") action.textContent = "Отметил задачу выполненной";
         else action.textContent = "Снял отметку выполнения";
 
@@ -586,21 +671,8 @@
       apiElements.profile.append(wrapper);
     }
 
-    async function openUserProfile(userId, trigger) {
-      const user = apiUsers.find((item) => String(item.id) === String(userId));
-      if (!user) return;
-      profileRequestId += 1;
-      const requestId = profileRequestId;
-      const normalizedUserId = String(user.id);
-      profileTrigger = trigger instanceof HTMLElement ? trigger : null;
-      apiElements.dialog.dataset.userId = normalizedUserId;
-      apiElements.dialogTitle.textContent = `Пользователь #${normalizedUserId}`;
+    function renderUserProfile(user) {
       apiElements.profile.replaceChildren();
-      renderUserActivity(normalizedUserId);
-      if (!apiElements.dialog.open) apiElements.dialog.showModal();
-      if (requestId !== profileRequestId) return;
-      apiElements.profileStatus.hidden = true;
-      apiElements.profile.hidden = false;
       const avatar = document.createElement("img");
       avatar.className = "user-profile-avatar";
       avatar.src = user.image || "";
@@ -616,27 +688,197 @@
       appendProfileField("Пол", user.gender);
       appendProfileField("Компания", user.company?.name);
       appendProfileField("Город", user.address?.city);
+      apiElements.profile.hidden = false;
     }
 
-    function populateMemberSelect() {
-      apiElements.memberSelect.replaceChildren();
+    function createUserSelect(selectedId, label) {
+      const select = document.createElement("select");
+      select.setAttribute("aria-label", label);
       for (const user of apiUsers) {
         const option = document.createElement("option");
         option.value = String(user.id);
         option.textContent = `ID ${user.id} — ${user.firstName} ${user.lastName}`;
-        apiElements.memberSelect.append(option);
+        select.append(option);
       }
-      if (!apiUsers.some((user) => String(user.id) === selectedMemberId)) {
-        selectedMemberId = String(apiUsers[0].id);
+      select.value = String(selectedId ?? "");
+      return select;
+    }
+
+    function createStatusSelect(completed, label) {
+      const select = document.createElement("select");
+      select.setAttribute("aria-label", label);
+      for (const [value, text] of [["false", "В работе"], ["true", "Завершена"]]) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = text;
+        select.append(option);
       }
-      apiElements.memberSelect.value = selectedMemberId;
-      apiElements.memberSelect.disabled = false;
-      apiElements.memberBadge.textContent = `Выбран ID ${selectedMemberId}`;
+      select.value = String(Boolean(completed));
+      return select;
+    }
+
+    function renderUserTasks() {
+      apiElements.profileTaskList.replaceChildren();
+      const visibleTasks = profileTasks.filter((task) =>
+        profileTaskFilter === "all" ||
+        (profileTaskFilter === "active" && !task.completed) ||
+        (profileTaskFilter === "completed" && task.completed)
+      );
+      const sortOrder = apiElements.profileTaskSort.value;
+      if (sortOrder !== "original") {
+        const direction = sortOrder === "desc" ? -1 : 1;
+        const collator = new Intl.Collator(["kk-KZ", "ru", "en"], { sensitivity: "base", numeric: true });
+        visibleTasks.sort((left, right) => direction * collator.compare(left.todo, right.todo));
+      }
+      apiElements.profileTaskCount.textContent = `Показано ${visibleTasks.length} из ${profileTasks.length}`;
+      apiElements.profileTasksStatus.textContent = `${profileTasks.length} тапсырма`;
+      for (const task of visibleTasks) {
+        const item = document.createElement("li");
+        item.className = "user-activity-item";
+        const text = document.createElement("p");
+        text.className = "user-activity-text";
+        text.textContent = task.todo;
+        const status = document.createElement("p");
+        status.className = "user-activity-action";
+        status.textContent = task.completed ? "Завершена" : "В работе";
+        item.append(text, status);
+
+        if (profileEditingTaskKey === String(task.taskKey ?? task.id)) {
+          const form = document.createElement("form");
+          form.className = "edit-form";
+          const title = document.createElement("input");
+          title.type = "text";
+          title.maxLength = 200;
+          title.required = true;
+          title.value = task.todo;
+          title.setAttribute("aria-label", "Тапсырманы өңдеу");
+          const assignee = createUserSelect(task.userId, "Тапсырма орындаушысы");
+          const taskStatus = createStatusSelect(task.completed, "Тапсырма статусы");
+          const save = document.createElement("button");
+          save.type = "submit";
+          save.className = "save-edit";
+          save.textContent = "Сақтау";
+          const cancel = document.createElement("button");
+          cancel.type = "button";
+          cancel.className = "cancel-edit";
+          cancel.textContent = "Болдырмау";
+          cancel.addEventListener("click", () => {
+            profileEditingTaskKey = null;
+            renderUserTasks();
+          });
+          form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const todo = title.value.trim();
+            if (!todo) {
+              title.focus();
+              return;
+            }
+            save.disabled = true;
+            cancel.disabled = true;
+            const updated = await updateApiTask(task, {
+              todo,
+              completed: taskStatus.value === "true",
+              userId: Number(assignee.value)
+            });
+            if (updated) {
+              profileEditingTaskKey = null;
+              renderUserTasks();
+            } else {
+              save.disabled = false;
+              cancel.disabled = false;
+            }
+          });
+          form.append(title, assignee, taskStatus, save, cancel);
+          item.append(form);
+        } else {
+          const actions = document.createElement("div");
+          actions.className = "actions";
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.className = "icon-button";
+          edit.textContent = "✏️";
+          edit.title = "Редактировать";
+          edit.setAttribute("aria-label", `Редактировать: ${task.todo}`);
+          edit.addEventListener("click", () => {
+            profileEditingTaskKey = String(task.taskKey ?? task.id);
+            renderUserTasks();
+          });
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.className = "icon-button delete";
+          remove.textContent = "🗑️";
+          remove.title = "Удалить";
+          remove.setAttribute("aria-label", `Удалить: ${task.todo}`);
+          remove.addEventListener("click", () => deleteApiTask(task));
+          actions.append(edit, remove);
+          item.append(actions);
+        }
+        apiElements.profileTaskList.append(item);
+      }
+    }
+
+    async function loadUserTasks(userId, requestId = profileRequestId) {
+      apiElements.profileTasksStatus.textContent = "Тапсырмалар жүктелуде…";
+      apiElements.profileTaskList.replaceChildren();
       try {
-        localStorage.setItem(CURRENT_MEMBER_KEY, selectedMemberId);
-      } catch {
-        showApiTaskMessage("Выбор участника загружен, но не удалось сохранить его в браузере.", "error");
+        const response = await fetchWithHttpLog(
+          `${API_TASKS_URL}/user/${encodeURIComponent(userId)}?limit=0`,
+          { headers: { Accept: "application/json" } }
+        );
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        if (!Array.isArray(payload?.todos) || payload.todos.some((task) =>
+          !task || (typeof task.id !== "number" && typeof task.id !== "string") ||
+          typeof task.todo !== "string" || typeof task.completed !== "boolean"
+        )) {
+          throw new Error("Сервер қайтарған тапсырмалар тізімі дұрыс емес.");
+        }
+        if (requestId !== profileRequestId || apiElements.dialog.dataset.userId !== String(userId)) return;
+        const remoteTasks = payload.todos.map((task) => ({
+          ...task,
+          taskKey: String(task.id),
+          isLocal: false
+        }));
+        const byTaskId = new Map(remoteTasks.map((task) => [String(task.taskKey ?? task.id), task]));
+        for (const task of apiTasks) {
+          if (String(task.userId) === String(userId)) {
+            byTaskId.set(String(task.taskKey ?? task.id), task);
+          }
+        }
+        profileTasks = [...byTaskId.values()].filter((task) => String(task.userId) === String(userId));
+        renderUserTasks();
+      } catch (error) {
+        if (requestId !== profileRequestId) return;
+        apiElements.profileTasksStatus.textContent = `Тапсырмалар жүктелмеді: ${error.message}`;
+        const retry = document.createElement("button");
+        retry.type = "button";
+        retry.className = "cancel-edit";
+        retry.textContent = "Қайта жүктеу";
+        retry.addEventListener("click", () => loadUserTasks(userId, requestId));
+        apiElements.profileTaskList.replaceChildren(retry);
       }
+    }
+
+    async function openUserProfile(userId, trigger) {
+      const user = apiUsers.find((item) => String(item.id) === String(userId));
+      if (!user) return;
+      profileRequestId += 1;
+      const requestId = profileRequestId;
+      const normalizedUserId = String(user.id);
+      profileTrigger = trigger instanceof HTMLElement ? trigger : null;
+      apiElements.dialog.dataset.userId = normalizedUserId;
+      apiElements.dialogTitle.textContent = `Пользователь #${normalizedUserId}`;
+      apiElements.profile.replaceChildren();
+      apiElements.profileTasks.hidden = false;
+      profileUserId = normalizedUserId;
+      profileEditingTaskKey = null;
+      apiElements.profileTasksStatus.textContent = "Тапсырмалар жүктелуде…";
+      renderUserActivity(normalizedUserId);
+      if (!apiElements.dialog.open) apiElements.dialog.showModal();
+      if (requestId !== profileRequestId) return;
+      apiElements.profileStatus.hidden = true;
+      renderUserProfile(user);
+      loadUserTasks(normalizedUserId, requestId);
     }
 
     async function loadApiUsers() {
@@ -656,11 +898,45 @@
         apiUsers = usersPayload.users;
         populateMemberSelect();
         renderApiTasks();
-      } catch {
+      } catch (error) {
         if (requestId !== usersLoadId) return;
         apiElements.memberSelect.disabled = true;
-        apiElements.memberBadge.textContent = "Қолданушылар жүктелмеді";
-        showApiTaskMessage("DummyJSON қолданушыларын жүктеу мүмкін болмады. Интернет байланысын тексеріп, бетті жаңартыңыз.", "error");
+        apiElements.memberBadge.textContent = "Не удалось загрузить";
+        apiElements.assignmentNote.textContent = "Список пользователей недоступен; добавление задач временно отключено.";
+        showApiTaskMessage(`DummyJSON қолданушыларын жүктеу мүмкін болмады: ${error.message}`, "error");
+      }
+    }
+
+    function updateAssignmentNote() {
+      const user = apiUsers.find((item) => String(item.id) === selectedMemberId);
+      if (!user) {
+        apiElements.assignmentNote.textContent = "Алдымен тапсырмаға жауапты қолданушыны таңдаңыз.";
+        apiElements.memberBadge.textContent = "Қолданушы таңдалмаған";
+        return;
+      }
+      apiElements.assignmentNote.textContent =
+        `Новая задача будет назначена пользователю ID ${user.id} — ${user.firstName} ${user.lastName}.`;
+      apiElements.memberBadge.textContent = `Выбран ID ${user.id}`;
+    }
+
+    function populateMemberSelect() {
+      apiElements.memberSelect.replaceChildren();
+      for (const user of apiUsers) {
+        const option = document.createElement("option");
+        option.value = String(user.id);
+        option.textContent = `ID ${user.id} — ${user.firstName} ${user.lastName}`;
+        apiElements.memberSelect.append(option);
+      }
+      if (!apiUsers.some((user) => String(user.id) === selectedMemberId)) {
+        selectedMemberId = String(apiUsers[0].id);
+      }
+      apiElements.memberSelect.value = selectedMemberId;
+      apiElements.memberSelect.disabled = false;
+      updateAssignmentNote();
+      try {
+        localStorage.setItem(CURRENT_MEMBER_KEY, selectedMemberId);
+      } catch {
+        showApiTaskMessage("Пайдаланушы таңдалды, бірақ таңдау браузерде сақталмады.", "error");
       }
     }
 
@@ -676,7 +952,7 @@
         const payload = await response.json();
         const sourceList = Array.isArray(payload) ? payload : Array.isArray(payload?.todos) ? payload.todos : Array.isArray(payload?.data) ? payload.data : [];
         if (!sourceList.length) throw new Error("Unexpected response");
-        apiTasks = sourceList.slice(0, 30).map((item) => {
+        const loadedTasks = sourceList.slice(0, 30).map((item) => {
           if (!item || typeof item !== "object") throw new Error("Invalid task");
           const id = item.id;
           const todo = typeof item.todo === "string" ? item.todo : typeof item.title === "string" ? item.title : (typeof item.task === "string" ? item.task : "");
@@ -691,11 +967,12 @@
             isLocal: false
           };
         });
+        apiTasks = [...readLocalApiTasks(), ...loadedTasks];
         apiLoaded = true;
         apiEditingId = null;
         renderApiTasks();
-      } catch {
-        showApiTaskMessage("Не удалось загрузить задачи. Проверьте подключение к интернету и попробуйте снова.", "error");
+      } catch (error) {
+        showApiTaskMessage(`Не удалось загрузить задачи: ${error.message}`, "error");
       } finally {
         apiLoading = false;
         apiElements.refresh.disabled = false;
@@ -708,6 +985,13 @@
         (apiFilter === "completed" && task.completed) ||
         (apiFilter === "active" && !task.completed)
       );
+      if (apiElements.taskSort.value !== "original") {
+        const sortDirection = apiElements.taskSort.value === "desc" ? -1 : 1;
+        const titleCollator = new Intl.Collator(["kk-KZ", "ru", "en"], { sensitivity: "base", numeric: true });
+        visibleTasks.sort((left, right) =>
+          sortDirection * titleCollator.compare(left.todo.trim(), right.todo.trim())
+        );
+      }
       apiElements.taskList.replaceChildren();
       apiElements.emptyState.hidden = visibleTasks.length > 0;
 
@@ -723,9 +1007,7 @@
         checkbox.className = "api-checkbox";
         checkbox.checked = task.completed;
         const ownerId = getTaskOwnerId(task);
-        const canEditTask = !ownerId || ownerId === selectedMemberId;
-        checkbox.disabled = !apiLoaded || !canEditTask;
-        if (!canEditTask) checkbox.title = `Тапсырма назначена участнику ID ${ownerId}`;
+        checkbox.disabled = !apiLoaded;
         checkbox.setAttribute("aria-label", `Выполнено: ${task.todo}`);
         checkbox.addEventListener("change", async () => {
           const snapshot = { ...task };
@@ -745,7 +1027,7 @@
         owner.append(checkbox);
         main.append(owner);
 
-        if (apiEditingId === String(task.id)) {
+        if (apiEditingId === String(task.taskKey ?? task.id)) {
           const form = document.createElement("form");
           form.className = "edit-form";
           const input = document.createElement("input");
@@ -754,6 +1036,8 @@
           input.required = true;
           input.value = task.todo;
           input.setAttribute("aria-label", "Редактировать задачу");
+          const assignee = createUserSelect(task.userId, "Тапсырма орындаушысы");
+          const status = createStatusSelect(task.completed, "Тапсырма статусы");
           const save = document.createElement("button");
           save.type = "submit";
           save.className = "save-edit";
@@ -776,7 +1060,11 @@
             }
             save.disabled = true;
             cancel.disabled = true;
-            const updated = await updateApiTask(task, { todo });
+            const updated = await updateApiTask(task, {
+              todo,
+              completed: status.value === "true",
+              userId: Number(assignee.value)
+            });
             if (updated) {
               apiEditingId = null;
               renderApiTasks();
@@ -785,7 +1073,7 @@
               cancel.disabled = false;
             }
           });
-          form.append(input, save, cancel);
+          form.append(input, assignee, status, save, cancel);
           main.append(form);
           requestAnimationFrame(() => input.focus());
         } else {
@@ -802,10 +1090,9 @@
           edit.title = "Редактировать";
           edit.setAttribute("aria-label", "Редактировать задачу");
           edit.textContent = "✏️";
-          edit.disabled = !apiLoaded || !canEditTask;
-          if (!canEditTask) edit.title = `Тапсырма назначена участнику ID ${ownerId}`;
+          edit.disabled = !apiLoaded;
           edit.addEventListener("click", () => {
-            apiEditingId = String(task.id);
+            apiEditingId = String(task.taskKey ?? task.id);
             renderApiTasks();
           });
 
@@ -815,20 +1102,27 @@
           remove.title = "Удалить";
           remove.setAttribute("aria-label", "Удалить задачу");
           remove.textContent = "🗑️";
-          remove.disabled = !apiLoaded || !canEditTask;
-          if (!canEditTask) remove.title = `Тапсырма назначена участнику ID ${ownerId}`;
+          remove.disabled = !apiLoaded;
           remove.addEventListener("click", () => deleteApiTask(task));
           actions.append(edit, remove);
           main.append(actions);
         }
 
-        const taskUserId = task.userId ?? ownerId ?? selectedMemberId;
+        const status = document.createElement("span");
+        status.className = `api-task-status ${task.completed ? "completed" : "in-progress"}`;
+        status.textContent = task.completed ? "Завершена" : "В работе";
+        main.append(status);
+
+        const taskUserId = task.userId ?? ownerId;
         const taskUser = apiUsers.find((user) => String(user.id) === String(taskUserId));
         const userCard = document.createElement("button");
         userCard.type = "button";
         userCard.className = "task-user-card";
-        userCard.title = `ID ${taskUserId} · ${taskUser ? `${taskUser.firstName} ${taskUser.lastName}` : "пользователь"} — открыть профиль`;
+        userCard.title = taskUser
+          ? `ID ${taskUserId} · ${taskUser.firstName} ${taskUser.lastName} — открыть профиль`
+          : "Для задачи не назначен пользователь";
         userCard.setAttribute("aria-label", userCard.title);
+        userCard.disabled = !taskUser;
         if (taskUser?.image) {
           const avatar = document.createElement("img");
           avatar.className = "task-user-avatar";
@@ -839,7 +1133,9 @@
         }
         const userLabel = document.createElement("span");
         userLabel.className = "task-user-label";
-        userLabel.textContent = `ID ${taskUserId} · ${taskUser ? `${taskUser.firstName} ${taskUser.lastName}` : "Пользователь"}`;
+        userLabel.textContent = taskUser
+          ? `ID ${taskUserId} · ${taskUser.firstName} ${taskUser.lastName}`
+          : "Без пользователя";
         userCard.append(userLabel);
         if (taskUser) userCard.addEventListener("click", () => openUserProfile(taskUserId, userCard));
 
@@ -851,8 +1147,10 @@
       apiElements.totalCount.textContent = String(apiTasks.length);
       apiElements.completedCount.textContent = String(completed);
       apiElements.activeCount.textContent = String(apiTasks.length - completed);
-      apiElements.addButton.disabled = !apiLoaded || !apiElements.newTask.value.trim();
-      apiElements.newTask.disabled = !apiLoaded;
+      const canAddTask = apiLoaded && apiUsers.some((user) => String(user.id) === selectedMemberId);
+      apiElements.addButton.disabled = !canAddTask || !apiElements.newTask.value.trim();
+      apiElements.newTask.disabled = !canAddTask;
+      apiElements.newStatus.disabled = !canAddTask;
     }
 
     async function updateApiTask(task, changes) {
@@ -860,15 +1158,13 @@
         showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
         return false;
       }
-      const ownerId = getTaskOwnerId(task);
-      if (ownerId && ownerId !== selectedMemberId) {
-        showApiTaskMessage(`Эта задача закреплена за участником ID ${ownerId}.`, "error");
+      showApiTaskMessage("");
+      if (Object.hasOwn(changes, "userId") &&
+        !apiUsers.some((user) => String(user.id) === String(changes.userId))) {
+        showApiTaskMessage("Выберите пользователя из списка.", "error");
         return false;
       }
-      showApiTaskMessage("");
-      if (task.isLocal) {
-        recordLocalOperation("PATCH", task);
-      } else {
+      if (!task.isLocal) {
         try {
           const response = await fetchWithHttpLog(`${API_TASKS_URL}/${encodeURIComponent(task.id)}`, {
             method: "PATCH",
@@ -876,27 +1172,35 @@
             body: JSON.stringify(changes)
           });
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        } catch {
-          showApiTaskMessage("Не удалось изменить задачу. Попробуйте снова.", "error");
+          const updated = await response.json();
+          if (!updated || String(updated.id) !== String(task.id)) {
+            throw new Error("Сервер қайтарған тапсырма ID-і сәйкес келмейді.");
+          }
+        } catch (error) {
+          showApiTaskMessage(`Не удалось изменить задачу: ${error.message}`, "error");
           return false;
         }
       }
-
-      let activitySaved = true;
-      if (Object.hasOwn(changes, "todo")) {
-        activitySaved = recordUserActivity(task, "edited", changes.todo, task.todo);
+      const changedTask = { ...task, ...changes };
+      if (Object.hasOwn(changes, "todo") || Object.hasOwn(changes, "userId")) {
+        recordUserActivity(changedTask, "edited", changedTask.todo, task.todo);
       } else if (Object.hasOwn(changes, "completed")) {
-        activitySaved = recordUserActivity(task, changes.completed ? "completed" : "reopened", task.todo);
+        recordUserActivity(changedTask, changes.completed ? "completed" : "reopened", changedTask.todo);
       }
       apiTasks = apiTasks.map((item) =>
-        String(item.taskKey ?? item.id) === String(task.taskKey ?? task.id) ? { ...item, ...changes } : item
+        String(item.taskKey ?? item.id) === String(task.taskKey ?? task.id) ? changedTask : item
       );
+      const localTasksSaved = !task.isLocal || saveLocalApiTasks();
+      profileTasks = profileTasks.map((item) =>
+        String(item.taskKey ?? item.id) === String(task.taskKey ?? task.id) ? changedTask : item
+      ).filter((item) => String(item.userId) === String(profileUserId));
       renderApiTasks();
-      if (activitySaved) {
+      if (apiElements.dialog.open) renderUserTasks();
+      if (localTasksSaved) {
         showApiTaskMessage(
           task.isLocal
-            ? "Задача изменена локально: DummyJSON не хранит задачи, созданные через POST."
-            : "Задача изменена.",
+            ? "Локальная задача обновлена и сохранена в браузере."
+            : "Задача изменена через DummyJSON. Для mock-задач результат не сохраняется на сервере.",
           "success"
         );
       }
@@ -904,41 +1208,56 @@
     }
 
     async function deleteApiTask(task) {
-      const ownerId = getTaskOwnerId(task);
-      if (ownerId && ownerId !== selectedMemberId) {
-        showApiTaskMessage(`Эта задача закреплена за участником ID ${ownerId}.`, "error");
-        return;
-      }
       showApiTaskMessage("");
-      if (task.isLocal) {
-        recordLocalOperation("DELETE", task);
-      } else {
+      if (!task.isLocal) {
         try {
           const response = await fetchWithHttpLog(
             `${API_TASKS_URL}/${encodeURIComponent(task.id)}`,
             { method: "DELETE" }
           );
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        } catch {
-          showApiTaskMessage("Не удалось удалить задачу. Попробуйте снова.", "error");
+        } catch (error) {
+          showApiTaskMessage(`Не удалось удалить задачу: ${error.message}`, "error");
           return;
         }
       }
 
+      recordUserActivity(task, "deleted", task.todo);
       apiTasks = apiTasks.filter((item) =>
         String(item.taskKey ?? item.id) !== String(task.taskKey ?? task.id)
       );
-      if (apiEditingId === String(task.id)) apiEditingId = null;
-      renderApiTasks();
-      showApiTaskMessage(
-        task.isLocal
-          ? "Задача удалена локально: DummyJSON не хранит задачи, созданные через POST."
-          : "Задача удалена.",
-        "success"
+      const localTasksSaved = !task.isLocal || saveLocalApiTasks();
+      profileTasks = profileTasks.filter((item) =>
+        String(item.taskKey ?? item.id) !== String(task.taskKey ?? task.id)
       );
+      if (apiEditingId === String(task.taskKey ?? task.id)) apiEditingId = null;
+      renderApiTasks();
+      if (apiElements.dialog.open) renderUserTasks();
+      if (localTasksSaved) {
+        showApiTaskMessage(
+          task.isLocal
+            ? "Локальная задача удалена."
+            : "Задача удалена через DummyJSON. Для mock-задач результат не сохраняется на сервере.",
+          "success"
+        );
+      }
     }
 
     apiElements.dialogClose.addEventListener("click", () => apiElements.dialog.close());
+    apiElements.profileAdd.addEventListener("click", () => {
+      if (!profileUserId) return;
+      selectedMemberId = profileUserId;
+      apiElements.memberSelect.value = selectedMemberId;
+      updateAssignmentNote();
+      try {
+        localStorage.setItem(CURRENT_MEMBER_KEY, selectedMemberId);
+      } catch {
+        showApiTaskMessage("Қолданушы таңдалды, бірақ таңдау браузерде сақталмады.", "error");
+      }
+      apiElements.dialog.close();
+      apiElements.newTask.focus({ preventScroll: true });
+      apiElements.newTask.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
     apiElements.dialog.addEventListener("click", (event) => {
       if (event.target === apiElements.dialog) apiElements.dialog.close();
     });
@@ -946,11 +1265,13 @@
       profileRequestId += 1;
       if (profileTrigger?.isConnected) profileTrigger.focus();
       profileTrigger = null;
+      profileUserId = null;
+      profileTasks = [];
+      profileEditingTaskKey = null;
     });
     apiElements.memberSelect.addEventListener("change", () => {
       selectedMemberId = apiElements.memberSelect.value;
-      apiElements.memberBadge.textContent = `Выбран ID ${selectedMemberId}`;
-      apiEditingId = null;
+      updateAssignmentNote();
       renderApiTasks();
       try {
         localStorage.setItem(CURRENT_MEMBER_KEY, selectedMemberId);
@@ -959,10 +1280,53 @@
         showApiTaskMessage("Участник выбран, но выбор не удалось сохранить в браузере.", "error");
       }
     });
+    document.querySelectorAll("[data-profile-filter]").forEach((button) => {
+      button.addEventListener("click", () => {
+        profileTaskFilter = button.dataset.profileFilter;
+        document.querySelectorAll("[data-profile-filter]").forEach((filterButton) => {
+          const selected = filterButton === button;
+          filterButton.classList.toggle("active", selected);
+          filterButton.setAttribute("aria-pressed", String(selected));
+        });
+        renderUserTasks();
+      });
+    });
+    apiElements.profileTaskSort.addEventListener("change", renderUserTasks);
     apiElements.refresh.addEventListener("click", () => loadApiTasks(currentApiUrl));
+    apiElements.random.addEventListener("click", async () => {
+      apiElements.random.disabled = true;
+      showApiTaskMessage("");
+      try {
+        const response = await fetchWithHttpLog(`${API_TASKS_URL}/random`, {
+          headers: { Accept: "application/json" }
+        });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const item = await response.json();
+        if (!item || (typeof item.id !== "number" && typeof item.id !== "string") ||
+          typeof item.todo !== "string" || typeof item.completed !== "boolean") {
+          throw new Error("DummyJSON тапсырманы дұрыс қайтармады.");
+        }
+        const task = {
+          ...item,
+          taskKey: String(item.id),
+          isLocal: false
+        };
+        const existingIndex = apiTasks.findIndex((entry) => String(entry.id) === String(task.id));
+        if (existingIndex === -1) apiTasks.unshift(task);
+        else apiTasks[existingIndex] = { ...apiTasks[existingIndex], ...task };
+        apiLoaded = true;
+        renderApiTasks();
+        showApiTaskMessage("Кездейсоқ тапсырма DummyJSON-нан жүктелді.", "success");
+      } catch (error) {
+        showApiTaskMessage(`Кездейсоқ тапсырманы жүктеу мүмкін болмады: ${error.message}`, "error");
+      } finally {
+        apiElements.random.disabled = false;
+      }
+    });
     document.querySelectorAll("#api-panel [data-api-url]").forEach((button) => {
       button.addEventListener("click", () => loadApiTasks(button.dataset.apiUrl));
     });
+    apiElements.taskSort.addEventListener("change", renderApiTasks);
     document.querySelectorAll("[data-api-filter]").forEach((button) => {
       button.addEventListener("click", () => {
         apiFilter = button.dataset.apiFilter;
@@ -982,13 +1346,22 @@
         apiElements.newTask.focus();
         return;
       }
+      const assignee = apiUsers.find((user) => String(user.id) === selectedMemberId);
+      if (!assignee) {
+        showApiTaskMessage("Сначала выберите пользователя, который работает с задачами.", "error");
+        return;
+      }
       apiElements.addButton.disabled = true;
       showApiTaskMessage("");
       try {
         const response = await fetchWithHttpLog(`${API_TASKS_URL}/add`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ todo, completed: false, userId: Number(selectedMemberId) })
+          body: JSON.stringify({
+            todo,
+            completed: apiElements.newStatus.value === "true",
+            userId: assignee.id
+          })
         });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const created = await response.json();
@@ -998,14 +1371,16 @@
         const newTask = {
           id: created.id,
           taskKey: `local-${created.id}-${Date.now()}-${taskCounter += 1}`,
-          todo,
-          completed: false,
-          userId: Number(selectedMemberId),
+          todo: typeof created.todo === "string" ? created.todo : todo,
+          completed: typeof created.completed === "boolean" ? created.completed : apiElements.newStatus.value === "true",
+          userId: typeof created.userId === "number" || typeof created.userId === "string" ? created.userId : assignee.id,
           isLocal: true
         };
         apiTasks.unshift(newTask);
+        const localTasksSaved = saveLocalApiTasks();
         const activitySaved = recordUserActivity(newTask, "added", todo);
         apiElements.newTask.value = "";
+        apiElements.newStatus.value = "false";
         apiFilter = "all";
         document.querySelectorAll("[data-api-filter]").forEach((button) => {
           const selected = button.dataset.apiFilter === "all";
@@ -1013,15 +1388,26 @@
           button.setAttribute("aria-pressed", String(selected));
         });
         renderApiTasks();
-        if (activitySaved) showApiTaskMessage("Задача добавлена.", "success");
-      } catch {
-        showApiTaskMessage("Не удалось добавить задачу. Попробуйте снова.", "error");
+        if (localTasksSaved) {
+          showApiTaskMessage(
+            activitySaved
+              ? `Задача добавлена и назначена ID ${newTask.userId}. Она сохранена в браузере.`
+              : "Задача добавлена, но историю действия не удалось сохранить.",
+            activitySaved ? "success" : "error"
+          );
+        }
+      } catch (error) {
+        showApiTaskMessage(`Не удалось добавить задачу: ${error.message}`, "error");
       } finally {
-        apiElements.addButton.disabled = !apiLoaded || !apiElements.newTask.value.trim();
+        apiElements.addButton.disabled = !apiLoaded ||
+          !apiUsers.some((user) => String(user.id) === selectedMemberId) ||
+          !apiElements.newTask.value.trim();
       }
     });
     apiElements.newTask.addEventListener("input", () => {
-      apiElements.addButton.disabled = !apiLoaded || !apiElements.newTask.value.trim();
+      apiElements.addButton.disabled = !apiLoaded ||
+        !apiUsers.some((user) => String(user.id) === selectedMemberId) ||
+        !apiElements.newTask.value.trim();
     });
 
     function storageKey(source) {
@@ -1309,10 +1695,8 @@
       showMessage(`Браузер жадына кіру мүмкін болмады: ${error.message}`, "error");
     }
     loadApi(savedSource, true);
-    loadApiTasks();
+    loadApiTasks(API_TASKS_LIST_URL);
     loadApiUsers();
-    document.getElementById("existing-panel").hidden = true;
-    document.getElementById("api-panel").hidden = false;
   </script>
 </body>
 </html>
